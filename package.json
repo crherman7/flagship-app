@@ -2,13 +2,13 @@
   "name": "@brandingbrand/app",
   "version": "1.0.0",
   "description": "",
+  "license": "ISC",
   "private": true,
+  "author": "Chris Herman",
+  "keywords": [],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "Chris Herman",
-  "license": "ISC",
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",

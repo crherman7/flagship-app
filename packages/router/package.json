@@ -2,14 +2,21 @@
   "name": "@brandingbrand/app-router",
   "version": "1.0.0",
   "description": "",
+  "license": "ISC",
+  "author": "Chris Herman",
+  "keywords": [],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "Chris Herman",
-  "license": "ISC",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "18.2.0",
+    "react-native": "^0.73.0",
+    "react": "18.2.0"
   }
 }
