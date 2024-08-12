@@ -74,7 +74,7 @@ class FlagshipAppRouter {
   constructor() {
     if (FlagshipAppRouter.instance) {
       throw new Error(
-        "FlagshipAppRouter was already instantiated. Use FlagshipAppRouter.shared instead."
+        "FlagshipAppRouter was already instantiated. Use FlagshipAppRouter.shared instead.",
       );
     }
 
@@ -133,7 +133,7 @@ class FlagshipAppRouter {
           </ErrorBoundary>
         );
       },
-      () => Component
+      () => Component,
     );
   }
 

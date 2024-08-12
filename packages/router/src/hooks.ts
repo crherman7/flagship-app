@@ -16,7 +16,7 @@ export function useRouterContext() {
 
   if (!state) {
     throw new Error(
-      "useRouterContext must be used inside a AppRouterURLContext.Provider"
+      "useRouterContext must be used inside a AppRouterURLContext.Provider",
     );
   }
 
@@ -34,7 +34,7 @@ export function useComponentId() {
 
   if (!state) {
     throw new Error(
-      "useAppRouterURLContext must be used inside a ComponentIdContext.Provider"
+      "useAppRouterURLContext must be used inside a ComponentIdContext.Provider",
     );
   }
 
