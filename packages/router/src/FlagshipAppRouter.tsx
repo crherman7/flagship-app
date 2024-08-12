@@ -4,11 +4,11 @@ import {
   Navigation,
   Options,
 } from "react-native-navigation";
+import { match } from "path-to-regexp";
 import { URL } from "react-native-url-polyfill";
 import { Fragment, PropsWithChildren } from "react";
 
 import { ComponentIdContext, RouterContext } from "./context";
-import { match } from "path-to-regexp";
 
 type Route = {
   name: string; // The name of the route, used for registration with React Native Navigation

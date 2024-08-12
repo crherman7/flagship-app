@@ -1,8 +1,8 @@
 import { match } from "path-to-regexp";
 import { useContext } from "react";
+import { Layout, Navigation, Options } from "react-native-navigation";
 
 import { RouterContext, ComponentIdContext } from "./context";
-import { Layout, Navigation, Options } from "react-native-navigation";
 import FlagshipAppRouter from "./FlagshipAppRouter";
 
 /**
