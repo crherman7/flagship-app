@@ -56,6 +56,13 @@ importers:
         version: 5.5.4
 
   packages/router:
+    dependencies:
+      path-to-regexp:
+        specifier: ^7.1.0
+        version: 7.1.0
+      react-native-url-polyfill:
+        specifier: ^2.0.0
+        version: 2.0.0(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0))
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -69,6 +76,9 @@ importers:
       react-native:
         specifier: ^0.73.0
         version: 0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0)
+      react-native-navigation:
+        specifier: 7.40.1
+        version: 7.40.1(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0))(react@18.2.0)
 
   packages/typescript-config: {}
 
@@ -1945,6 +1955,9 @@ packages:
     resolution: {integrity: sha512-cnN7bQUm65UWOy6cbGcCcZ3rpwW8Q/j4OP5aWRhEry4Z2t2aR1cjrbp0BS+KiBN0smvP1caBgAuxutvyvJILzQ==}
     engines: {node: '>=8'}
 
+  hoist-non-react-statics@3.3.2:
+    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+
   http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
     engines: {node: '>= 0.8'}
@@ -2251,6 +2264,9 @@ packages:
 
   lodash.throttle@4.1.1:
     resolution: {integrity: sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==}
+
+  lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
   log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
@@ -2576,6 +2592,10 @@ packages:
   path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
 
+  path-to-regexp@7.1.0:
+    resolution: {integrity: sha512-ZToe+MbUF4lBqk6dV8GKot4DKfzrxXsplOddH8zN3YK+qw9/McvP7+4ICjZvOne0jQhN4eJwHsX6tT0Ns19fvw==}
+    engines: {node: '>=16'}
+
   path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
@@ -2658,6 +2678,25 @@ packages:
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+
+  react-lifecycles-compat@2.0.0:
+    resolution: {integrity: sha512-txfpPCQYiazVdcbMRhatqWKcAxJweUu2wDXvts5/7Wyp6+Y9cHojqXHsLPEckzutfHlxZhG8Oiundbmp8Fd6eQ==}
+
+  react-native-navigation@7.40.1:
+    resolution: {integrity: sha512-GQ6Azdhf6EtkUVdYv/3hbid3tDiEQnJf47TL6Joc0R92DUEA3c1tpXG0z9Y/D7lzYFOaIBPg3efnMHrpk74GeA==}
+    hasBin: true
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+      remx: '*'
+    peerDependenciesMeta:
+      remx:
+        optional: true
+
+  react-native-url-polyfill@2.0.0:
+    resolution: {integrity: sha512-My330Do7/DvKnEvwQc0WdcBnFPploYKp9CYlefDXzIdEaA+PAhDYllkvGeEroEzvc4Kzzj2O4yVdz8v6fjRvhA==}
+    peerDependencies:
+      react-native: '*'
 
   react-native@0.73.9:
     resolution: {integrity: sha512-U9Lc6GMdANG2/9uREZe/UTQEzdVWw6NLRYxBYaFWNqiu/qZAmZ0aXSNcVF6hWw/95Ex0IGQx6EVMT4iPmuSNQw==}
@@ -3009,6 +3048,9 @@ packages:
   tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
+  tslib@1.9.3:
+    resolution: {integrity: sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ==}
+
   tslib@2.6.3:
     resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
 
@@ -3117,8 +3159,16 @@ packages:
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
+  webidl-conversions@5.0.0:
+    resolution: {integrity: sha512-VlZwKPCkYKxQgeSbH5EyngOmRp7Ww7I9rQLERETtf5ofd9pGeswWiOtogpEO850jziPRarreGxn5QIiTqpb2wA==}
+    engines: {node: '>=8'}
+
   whatwg-fetch@3.6.20:
     resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
+
+  whatwg-url-without-unicode@8.0.0-3:
+    resolution: {integrity: sha512-HoKuzZrUlgpz35YO27XgD28uh/WJH4B0+3ttFqRo//lmq+9T/mIOJ6kqmINI9HpUpz1imRC/nR/lxKpJiv0uig==}
+    engines: {node: '>=10'}
 
   whatwg-url@5.0.0:
     resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
@@ -5681,6 +5731,10 @@ snapshots:
     dependencies:
       source-map: 0.7.4
 
+  hoist-non-react-statics@3.3.2:
+    dependencies:
+      react-is: 16.13.1
+
   http-errors@2.0.0:
     dependencies:
       depd: 2.0.0
@@ -5995,6 +6049,8 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash.throttle@4.1.1: {}
+
+  lodash@4.17.21: {}
 
   log-symbols@4.1.0:
     dependencies:
@@ -6414,6 +6470,8 @@ snapshots:
 
   path-parse@1.0.7: {}
 
+  path-to-regexp@7.1.0: {}
+
   path-type@4.0.0: {}
 
   picocolors@1.0.1: {}
@@ -6487,6 +6545,23 @@ snapshots:
   react-is@17.0.2: {}
 
   react-is@18.3.1: {}
+
+  react-lifecycles-compat@2.0.0: {}
+
+  react-native-navigation@7.40.1(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0))(react@18.2.0):
+    dependencies:
+      hoist-non-react-statics: 3.3.2
+      lodash: 4.17.21
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-lifecycles-compat: 2.0.0
+      react-native: 0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0)
+      tslib: 1.9.3
+
+  react-native-url-polyfill@2.0.0(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0)):
+    dependencies:
+      react-native: 0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0)
+      whatwg-url-without-unicode: 8.0.0-3
 
   react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0):
     dependencies:
@@ -6891,6 +6966,8 @@ snapshots:
 
   tslib@1.14.1: {}
 
+  tslib@1.9.3: {}
+
   tslib@2.6.3: {}
 
   tsutils@3.21.0(typescript@5.5.4):
@@ -6994,7 +7071,15 @@ snapshots:
 
   webidl-conversions@3.0.1: {}
 
+  webidl-conversions@5.0.0: {}
+
   whatwg-fetch@3.6.20: {}
+
+  whatwg-url-without-unicode@8.0.0-3:
+    dependencies:
+      buffer: 5.7.1
+      punycode: 2.3.1
+      webidl-conversions: 5.0.0
 
   whatwg-url@5.0.0:
     dependencies:
