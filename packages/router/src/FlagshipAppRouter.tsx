@@ -8,6 +8,7 @@ import { URL } from "react-native-url-polyfill";
 import { Fragment, PropsWithChildren } from "react";
 
 import { ComponentIdContext, RouterContext } from "./context";
+import { match } from "path-to-regexp";
 
 type Route = {
   name: string;
@@ -71,13 +72,13 @@ class FlagshipAppRouter {
   }
 
   protected registerScreen(route: Route) {
-    (route.Component as any).options = route.options;
-    const { Component } = route;
+    const { Component, ErroBoundary, action, options, ...match } = route;
 
     if (!Component) return;
 
-    const { Provider } = this;
+    (route.Component as any).options = options;
 
+    const { Provider } = this;
     const ErrorBoundary =
       route.ErroBoundary ??
       function ({ children }: PropsWithChildren) {
@@ -87,18 +88,20 @@ class FlagshipAppRouter {
     Navigation.registerComponent(
       route.name,
       () => (props) => {
-        const { componetId, __flagship_app_router_url, ...passProps } = props;
-
-        const url = new URL(__flagship_app_router_url);
+        const { componetId, __flagship_app_router_url, ...data } = props;
 
         return (
           <ErrorBoundary>
             <Provider>
               <RouterContext.Provider
-                value={{ match: route, url, data: passProps }}
+                value={{
+                  match,
+                  url: new URL(__flagship_app_router_url),
+                  data,
+                }}
               >
                 <ComponentIdContext.Provider value={componetId}>
-                  <Component {...passProps} />
+                  <Component {...data} />
                 </ComponentIdContext.Provider>
               </RouterContext.Provider>
             </Provider>
@@ -141,18 +144,33 @@ class FlagshipAppRouter {
 
   register({ onAppLaunched, routes, Provider }: AppRouter) {
     this.onAppLaunched = onAppLaunched;
+    this.registeredRoutes = routes;
 
     if (Provider) {
       this.Provider = Provider;
     }
 
-    routes.forEach((it) => {
-      if (it.options?.bottomTab) {
-        this.registerBottomTab(it);
+    routes.forEach((route) => {
+      if (route.options?.bottomTab) {
+        this.registerBottomTab(route);
       } else {
-        this.registerScreen(it);
+        this.registerScreen(route);
       }
     });
+  }
+
+  pathToRouteName(path: string) {
+    const route = this.registeredRoutes.find((route) => {
+      const matches = match(route.path)(path);
+
+      return matches;
+    });
+
+    if (!route) {
+      throw new Error(`unable to find route for ${path}`);
+    }
+
+    return route.name;
   }
 }
 

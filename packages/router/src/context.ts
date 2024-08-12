@@ -2,7 +2,7 @@ import React from "react";
 import { URL } from "react-native-url-polyfill";
 
 type Router = {
-  match: any; // Type representing the match object from the router
+  match: { path: string; name: string }; // Type representing the match object from the router
   url: URL; // Type representing the URL object
   data: unknown; // Type representing any data associated with the router
 };

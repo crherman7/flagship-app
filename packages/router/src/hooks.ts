@@ -2,6 +2,8 @@ import { match } from "path-to-regexp";
 import { useContext } from "react";
 
 import { RouterContext, ComponentIdContext } from "./context";
+import { Layout, Navigation, Options } from "react-native-navigation";
+import FlagshipAppRouter from "./FlagshipAppRouter";
 
 /**
  * Custom hook to access the Router context.
@@ -101,4 +103,92 @@ export function useRouterData() {
   const router = useRouterContext();
 
   return router.data;
+}
+
+/**
+ * Custom hook to provide navigation functions for managing the component stack.
+ *
+ * This hook relies on `react-native-navigation` to navigate between screens. It includes methods
+ * to push new screens onto the stack, pop screens off the stack, and set the root of the stack.
+ *
+ * @returns {object} An object containing navigation methods: `push`, `pop`, `popToRoot`, `popTo`, `setStackRoot`, and `showModal`.
+ */
+export function useNavigator() {
+  const componentId = useComponentId();
+
+  /**
+   * Push a new screen onto the navigation stack.
+   *
+   * @param {string} path - The path or route name to navigate to.
+   * @param {object} [passProps={}] - Optional props to pass to the new screen.
+   * @param {Options} [options] - Optional navigation options for customizing the transition.
+   */
+  function push(path: string, passProps = {}, options?: Options) {
+    const name = FlagshipAppRouter.shared.pathToRouteName(path);
+
+    Navigation.push(componentId, {
+      component: {
+        name,
+        passProps: {
+          ...passProps,
+          __flagship_app_router_url: path, // Inject the URL path as a special prop
+        },
+        options,
+      },
+    });
+  }
+
+  /**
+   * Pop the current screen off the navigation stack, returning to the previous screen.
+   *
+   * @param {Options} [mergeOptions] - Optional navigation options for customizing the transition.
+   */
+  function pop(mergeOptions?: Options) {
+    Navigation.pop(componentId, mergeOptions);
+  }
+
+  /**
+   * Pop all screens off the stack and return to the root screen.
+   *
+   * @param {Options} [mergeOptions] - Optional navigation options for customizing the transition.
+   */
+  function popToRoot(mergeOptions?: Options) {
+    Navigation.popToRoot(componentId, mergeOptions);
+  }
+
+  /**
+   * Pop to a specific screen in the stack.
+   *
+   * @param {Options} [mergeOptions] - Optional navigation options for customizing the transition.
+   */
+  function popTo(mergeOptions?: Options) {
+    Navigation.popTo(componentId, mergeOptions);
+  }
+
+  /**
+   * Set a new root for the stack, replacing all existing screens.
+   *
+   * @param {Layout | Layout[]} layout - The new layout or stack of layouts to set as the root.
+   */
+  function setStackRoot(layout: Layout | Layout[]) {
+    Navigation.setStackRoot(componentId, layout);
+  }
+
+  /**
+   * Show a modal screen.
+   *
+   * TODO: Implement the logic for displaying a modal screen.
+   */
+  function showModal() {
+    // TODO: implement showModal logic
+  }
+
+  return {
+    push,
+    pop,
+    popToRoot,
+    popTo,
+    setStackRoot,
+    showModal,
+  };
 }
