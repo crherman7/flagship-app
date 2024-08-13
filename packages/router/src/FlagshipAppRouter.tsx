@@ -1,7 +1,7 @@
 import {LayoutRoot, LayoutStack, Navigation} from 'react-native-navigation';
 import {match} from 'path-to-regexp';
 import {URL} from 'react-native-url-polyfill';
-import {Fragment} from 'react';
+import {Fragment, Suspense, useMemo} from 'react';
 
 import {ComponentIdContext, RouteContext} from './context';
 import {AppRouter, Route} from './types';
@@ -58,20 +58,14 @@ class FlagshipAppRouter {
    * @protected
    * @param {Route} route - The route object containing the component and associated metadata.
    */
-  protected registerScreen(
-    route: Route,
-    PartialProvider?: React.ComponentType,
-  ) {
-    const {Component, options} = route;
+  protected registerScreen(route: Route, Provider = Fragment) {
+    const {Component, ErrorBoundary = Fragment, options = {}} = route;
 
     if (!Component) return;
 
-    if (options) {
+    if (Object.keys(options).length) {
       (route.Component as any).options = options;
     }
-
-    const ErrorBoundary = route.ErroBoundary ?? Fragment;
-    const Provider = PartialProvider ?? Fragment;
 
     // Register the component with React Native Navigation
     Navigation.registerComponent(
@@ -79,13 +73,21 @@ class FlagshipAppRouter {
       () => props => {
         const {componentId, __flagship_app_router_url, ...data} = props;
 
+        const url = useMemo(() => {
+          if (__flagship_app_router_url) {
+            return new URL(__flagship_app_router_url);
+          }
+
+          return null;
+        }, [__flagship_app_router_url]);
+
         return (
           <ErrorBoundary>
             <Provider>
               <RouteContext.Provider
                 value={{
                   match: route,
-                  url: new URL(route.path), // Create a URL object from the route path
+                  url,
                   data,
                 }}>
                 <ComponentIdContext.Provider value={componentId}>
@@ -148,7 +150,10 @@ class FlagshipAppRouter {
     routes.forEach(route => {
       const {bottomTab, ...passOptions} = route.options ?? {};
 
-      this.registerScreen({...route, options: passOptions}, Provider);
+      this.registerScreen(
+        {...route, options: passOptions},
+        (Provider = Fragment),
+      );
 
       if (bottomTab) {
         this.registerBottomTab(route);

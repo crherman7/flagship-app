@@ -24,12 +24,12 @@ export type Route = {
   /**
    * The React component associated with the route
    */
-  Component?: React.ComponentType<any> | null;
+  Component?: React.ComponentType;
 
   /**
    * Optional error boundary component for the route
    */
-  ErroBoundary?: React.ComponentType | null;
+  ErrorBoundary?: React.ComponentType;
 };
 
 export type MatchedRoute = {
@@ -41,7 +41,7 @@ export type MatchedRoute = {
   /**
    * Type representing the URL object
    */
-  url: URL;
+  url: URL | null;
 
   /**
    * Type representing any data associated with the router

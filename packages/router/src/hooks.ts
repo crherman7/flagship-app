@@ -11,7 +11,7 @@ import FlagshipAppRouter from './FlagshipAppRouter';
  * @returns {RouterContextType} The current router state from the RouterContext.
  * @throws Will throw an error if the hook is used outside of a RouterContext.Provider.
  */
-export function useRouterContext() {
+export function useRoute() {
   const state = useContext(RouteContext);
 
   if (!state) {
@@ -48,17 +48,23 @@ export function useComponentId() {
  * @throws Will throw an error if no matches are found for the path parameters.
  */
 export function usePathParams() {
-  const router = useRouterContext();
+  const route = useRoute();
+
+  if (!route.url) return {};
 
   // Match the current URL pathname against the router's path pattern
-  const matches = match(router.match.path)(router.url.pathname);
+  try {
+    const matches = match(route.match.path)(route.url.pathname);
 
-  if (!matches) {
-    throw new Error('no matches for path params');
+    if (!matches) {
+      throw new Error('no matches for path params');
+    }
+
+    // Return the matched parameters
+    return matches.params;
+  } catch (e) {
+    return {};
   }
-
-  // Return the matched parameters
-  return matches.params;
 }
 
 /**
@@ -67,7 +73,9 @@ export function usePathParams() {
  * @returns {Record<string, string>} An object containing key-value pairs of search parameters.
  */
 export function useQueryParams() {
-  const router = useRouterContext();
+  const route = useRoute();
+
+  if (!route.url) return {};
 
   // Regular expression to find query parameters in the URL
   const regex = /[?&]([^=#]+)=([^&#]*)/g;
@@ -79,7 +87,7 @@ export function useQueryParams() {
   let match: RegExpExecArray | null;
 
   // Loop through all matches found in the URL
-  while ((match = regex.exec(router.url.href)) !== null) {
+  while ((match = regex.exec(route.url.href)) !== null) {
     // Extract parameter name and value from the match
     const paramName = match[1];
     const paramValue = match[2];
@@ -100,9 +108,9 @@ export function useQueryParams() {
  * @returns {RouterDataType} The current router data.
  */
 export function useRouteData<T>(): T {
-  const router = useRouterContext();
+  const route = useRoute();
 
-  return router.data as T;
+  return route.data as T;
 }
 
 /**
