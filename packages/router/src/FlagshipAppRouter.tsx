@@ -1,7 +1,7 @@
 import {LayoutRoot, LayoutStack, Navigation} from 'react-native-navigation';
 import {match} from 'path-to-regexp';
 import {URL} from 'react-native-url-polyfill';
-import {Fragment, PropsWithChildren} from 'react';
+import {Fragment} from 'react';
 
 import {ComponentIdContext, RouteContext} from './context';
 import {AppRouter, Route} from './types';
@@ -14,12 +14,6 @@ class FlagshipAppRouter {
   protected static instance: FlagshipAppRouter;
 
   protected routes: Route[] = [];
-
-  protected Provider: React.ComponentType<PropsWithChildren> = function ({
-    children,
-  }: PropsWithChildren) {
-    return <Fragment>{children}</Fragment>;
-  };
 
   /**
    * Object containing the React Native Navigation layout.
@@ -68,29 +62,20 @@ class FlagshipAppRouter {
     route: Route,
     PartialProvider?: React.ComponentType,
   ) {
-    const {Component, action, options} = route;
+    const {Component, options} = route;
 
     if (!Component) return;
 
     (route.Component as any).options = options;
 
-    const ErrorBoundary =
-      route.ErroBoundary ??
-      function ({children}: PropsWithChildren) {
-        return <Fragment>{children}</Fragment>;
-      };
-
-    const Provider =
-      PartialProvider ??
-      function ({children}: PropsWithChildren) {
-        return <Fragment>{children}</Fragment>;
-      };
+    const ErrorBoundary = route.ErroBoundary ?? Fragment;
+    const Provider = PartialProvider ?? Fragment;
 
     // Register the component with React Native Navigation
     Navigation.registerComponent(
       route.name,
       () => props => {
-        const {componetId, __flagship_app_router_url, ...data} = props;
+        const {componentId, __flagship_app_router_url, ...data} = props;
 
         return (
           <ErrorBoundary>
@@ -101,8 +86,8 @@ class FlagshipAppRouter {
                   url: new URL(__flagship_app_router_url), // Create a URL object from the route path
                   data,
                 }}>
-                <ComponentIdContext.Provider value={componetId}>
-                  <Component {...data} />
+                <ComponentIdContext.Provider value={componentId}>
+                  <Component />
                 </ComponentIdContext.Provider>
               </RouteContext.Provider>
             </Provider>
@@ -202,7 +187,7 @@ class FlagshipAppRouter {
    * @returns {string} The name of the matched route.
    * @throws Will throw an error if no route is found for the given path.
    */
-  pathToRouteName(path: string): string {
+  pathToRoute(path: string): Route {
     const route = this.routes.find(route => {
       const matches = match(route.path)(path);
 
@@ -213,7 +198,7 @@ class FlagshipAppRouter {
       throw new Error(`unable to find route for ${path}`);
     }
 
-    return route.name;
+    return route;
   }
 }
 

@@ -99,10 +99,10 @@ export function useQueryParams() {
  *
  * @returns {RouterDataType} The current router data.
  */
-export function useRouteData() {
+export function useRouteData<T>(): T {
   const router = useRouterContext();
 
-  return router.data;
+  return router.data as T;
 }
 
 /**
@@ -123,12 +123,16 @@ export function useNavigator() {
    * @param {object} [passProps={}] - Optional props to pass to the new screen.
    * @param {Options} [options] - Optional navigation options for customizing the transition.
    */
-  function push(path: string, passProps = {}, options?: Options) {
-    const name = FlagshipAppRouter.shared.pathToRouteName(path);
+  async function push(path: string, passProps = {}, options?: Options) {
+    const route = FlagshipAppRouter.shared.pathToRoute(path);
 
-    Navigation.push(componentId, {
+    if (route.action) {
+      await route.action().catch(() => {});
+    }
+
+    return Navigation.push(componentId, {
       component: {
-        name,
+        name: route.name,
         passProps: {
           ...passProps,
           __flagship_app_router_url: path, // Inject the URL path as a special prop
@@ -144,7 +148,7 @@ export function useNavigator() {
    * @param {Options} [mergeOptions] - Optional navigation options for customizing the transition.
    */
   function pop(mergeOptions?: Options) {
-    Navigation.pop(componentId, mergeOptions);
+    return Navigation.pop(componentId, mergeOptions);
   }
 
   /**
@@ -153,7 +157,7 @@ export function useNavigator() {
    * @param {Options} [mergeOptions] - Optional navigation options for customizing the transition.
    */
   function popToRoot(mergeOptions?: Options) {
-    Navigation.popToRoot(componentId, mergeOptions);
+    return Navigation.popToRoot(componentId, mergeOptions);
   }
 
   /**
@@ -162,7 +166,7 @@ export function useNavigator() {
    * @param {Options} [mergeOptions] - Optional navigation options for customizing the transition.
    */
   function popTo(mergeOptions?: Options) {
-    Navigation.popTo(componentId, mergeOptions);
+    return Navigation.popTo(componentId, mergeOptions);
   }
 
   /**
@@ -171,7 +175,7 @@ export function useNavigator() {
    * @param {Layout | Layout[]} layout - The new layout or stack of layouts to set as the root.
    */
   function setStackRoot(layout: Layout | Layout[]) {
-    Navigation.setStackRoot(componentId, layout);
+    return Navigation.setStackRoot(componentId, layout);
   }
 
   /**

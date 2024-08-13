@@ -10,6 +10,7 @@ import {MatchedRoute} from './types';
 export const RouteContext = React.createContext<MatchedRoute | null>(null);
 
 // Assign a display name to the RouteContext for easier debugging in development
+// eslint-disable-next-line no-undef
 if (__DEV__) {
   RouteContext.displayName = 'RouteContext';
 }
@@ -22,6 +23,7 @@ if (__DEV__) {
 export const ComponentIdContext = React.createContext<string | null>(null);
 
 // Assign a display name to the ComponentIdContext for easier debugging in development
+// eslint-disable-next-line no-undef
 if (__DEV__) {
   ComponentIdContext.displayName = 'ComponentIdContext';
 }
