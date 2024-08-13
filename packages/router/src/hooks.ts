@@ -1,9 +1,9 @@
-import { match } from "path-to-regexp";
-import { useContext } from "react";
-import { Layout, Navigation, Options } from "react-native-navigation";
+import {match} from 'path-to-regexp';
+import {useContext} from 'react';
+import {Layout, Navigation, Options} from 'react-native-navigation';
 
-import { RouterContext, ComponentIdContext } from "./context";
-import FlagshipAppRouter from "./FlagshipAppRouter";
+import {RouterContext, ComponentIdContext} from './context';
+import FlagshipAppRouter from './FlagshipAppRouter';
 
 /**
  * Custom hook to access the Router context.
@@ -16,7 +16,7 @@ export function useRouterContext() {
 
   if (!state) {
     throw new Error(
-      "useRouterContext must be used inside a AppRouterURLContext.Provider",
+      'useRouterContext must be used inside a AppRouterURLContext.Provider',
     );
   }
 
@@ -34,7 +34,7 @@ export function useComponentId() {
 
   if (!state) {
     throw new Error(
-      "useAppRouterURLContext must be used inside a ComponentIdContext.Provider",
+      'useAppRouterURLContext must be used inside a ComponentIdContext.Provider',
     );
   }
 
@@ -47,14 +47,14 @@ export function useComponentId() {
  * @returns {Record<string, string>} An object containing the matched URL parameters.
  * @throws Will throw an error if no matches are found for the path parameters.
  */
-export function useParams() {
+export function usePathParams() {
   const router = useRouterContext();
 
   // Match the current URL pathname against the router's path pattern
   const matches = match(router.match.path)(router.url.pathname);
 
   if (!matches) {
-    throw new Error("no matches for path params");
+    throw new Error('no matches for path params');
   }
 
   // Return the matched parameters
@@ -66,7 +66,7 @@ export function useParams() {
  *
  * @returns {Record<string, string>} An object containing key-value pairs of search parameters.
  */
-export function useSearchParams() {
+export function useQueryParams() {
   const router = useRouterContext();
 
   // Regular expression to find query parameters in the URL
@@ -99,7 +99,7 @@ export function useSearchParams() {
  *
  * @returns {RouterDataType} The current router data.
  */
-export function useRouterData() {
+export function useRouteData() {
   const router = useRouterContext();
 
   return router.data;
