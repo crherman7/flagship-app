@@ -39,7 +39,3 @@ yarn-error.log*
 
 # Astro
 .astro/
-
-!**/coderc/build
-apps/example/ios
-apps/example/android

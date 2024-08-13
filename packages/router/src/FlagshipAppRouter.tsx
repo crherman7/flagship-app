@@ -1,7 +1,7 @@
 import {LayoutRoot, LayoutStack, Navigation} from 'react-native-navigation';
 import {match} from 'path-to-regexp';
 import {URL} from 'react-native-url-polyfill';
-import {Fragment, Suspense, useMemo} from 'react';
+import {Fragment, useMemo} from 'react';
 
 import {ComponentIdContext, RouteContext} from './context';
 import {AppRouter, Route} from './types';
