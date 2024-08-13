@@ -66,7 +66,9 @@ class FlagshipAppRouter {
 
     if (!Component) return;
 
-    (route.Component as any).options = options;
+    if (options) {
+      (route.Component as any).options = options;
+    }
 
     const ErrorBoundary = route.ErroBoundary ?? Fragment;
     const Provider = PartialProvider ?? Fragment;
@@ -83,7 +85,7 @@ class FlagshipAppRouter {
               <RouteContext.Provider
                 value={{
                   match: route,
-                  url: new URL(__flagship_app_router_url), // Create a URL object from the route path
+                  url: new URL(route.path), // Create a URL object from the route path
                   data,
                 }}>
                 <ComponentIdContext.Provider value={componentId}>

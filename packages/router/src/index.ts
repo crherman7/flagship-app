@@ -1,9 +1,5 @@
-import "react-native-url-polyfill/auto";
+import 'react-native-url-polyfill/auto';
+import FlagshipAppRouterInstance from './FlagshipAppRouter';
 
-import FlagshipAppRouter from "./FlagshipAppRouter";
-
-export * from "./hooks";
-
-export default {
-  register: FlagshipAppRouter.shared.register,
-};
+export * from './hooks';
+export const {shared: FlagshipAppRouter} = FlagshipAppRouterInstance;
