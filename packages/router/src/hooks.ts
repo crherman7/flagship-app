@@ -2,7 +2,7 @@ import {match} from 'path-to-regexp';
 import {useContext} from 'react';
 import {Layout, Navigation, Options} from 'react-native-navigation';
 
-import {RouterContext, ComponentIdContext} from './context';
+import {RouteContext, ComponentIdContext} from './context';
 import FlagshipAppRouter from './FlagshipAppRouter';
 
 /**
@@ -12,7 +12,7 @@ import FlagshipAppRouter from './FlagshipAppRouter';
  * @throws Will throw an error if the hook is used outside of a RouterContext.Provider.
  */
 export function useRouterContext() {
-  const state = useContext(RouterContext);
+  const state = useContext(RouteContext);
 
   if (!state) {
     throw new Error(

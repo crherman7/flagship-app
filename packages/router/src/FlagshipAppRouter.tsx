@@ -1,29 +1,10 @@
-import {
-  LayoutRoot,
-  LayoutStack,
-  Navigation,
-  Options,
-} from "react-native-navigation";
-import { match } from "path-to-regexp";
-import { URL } from "react-native-url-polyfill";
-import { Fragment, PropsWithChildren } from "react";
+import {LayoutRoot, LayoutStack, Navigation} from 'react-native-navigation';
+import {match} from 'path-to-regexp';
+import {URL} from 'react-native-url-polyfill';
+import {Fragment, PropsWithChildren} from 'react';
 
-import { ComponentIdContext, RouterContext } from "./context";
-
-type Route = {
-  name: string; // The name of the route, used for registration with React Native Navigation
-  path: string; // The path pattern associated with the route
-  options?: Options; // Optional navigation options for customizing the route
-  action?: () => Promise<void>; // Optional action to be executed when the route is activated
-  Component?: React.ComponentType<any> | null; // The React component associated with the route
-  ErroBoundary?: React.ComponentType | null; // Optional error boundary component for the route
-};
-
-type AppRouter = {
-  routes: Route[]; // Array of routes to be registered with the router
-  Provider?: React.ComponentType | null; // Optional provider component for wrapping the application
-  onAppLaunched?: () => Promise<void>; // Optional callback for when the app is launched
-};
+import {ComponentIdContext, RouteContext} from './context';
+import {AppRouter, Route} from './types';
 
 /**
  * A singleton class that manages the routing logic and registration of components
@@ -32,9 +13,7 @@ type AppRouter = {
 class FlagshipAppRouter {
   protected static instance: FlagshipAppRouter;
 
-  protected registeredRoutes: Route[] = [];
-
-  protected onAppLaunched?: () => Promise<void>;
+  protected routes: Route[] = [];
 
   protected Provider: React.ComponentType<PropsWithChildren> = function ({
     children,
@@ -74,19 +53,9 @@ class FlagshipAppRouter {
   constructor() {
     if (FlagshipAppRouter.instance) {
       throw new Error(
-        "FlagshipAppRouter was already instantiated. Use FlagshipAppRouter.shared instead.",
+        'FlagshipAppRouter was already instantiated. Use FlagshipAppRouter.shared instead.',
       );
     }
-
-    // Register the app launch event listener
-    Navigation.events().registerAppLaunchedListener(async () => {
-      if (this.onAppLaunched) {
-        await this.onAppLaunched().catch(() => {});
-      }
-
-      // Set the root layout of the app
-      Navigation.setRoot(this.layout);
-    });
   }
 
   /**
@@ -95,40 +64,47 @@ class FlagshipAppRouter {
    * @protected
    * @param {Route} route - The route object containing the component and associated metadata.
    */
-  protected registerScreen(route: Route) {
-    const { Component, ErroBoundary, action, options, ...match } = route;
+  protected registerScreen(
+    route: Route,
+    PartialProvider?: React.ComponentType,
+  ) {
+    const {Component, action, options} = route;
 
     if (!Component) return;
 
     (route.Component as any).options = options;
 
-    const { Provider } = this;
     const ErrorBoundary =
       route.ErroBoundary ??
-      function ({ children }: PropsWithChildren) {
+      function ({children}: PropsWithChildren) {
+        return <Fragment>{children}</Fragment>;
+      };
+
+    const Provider =
+      PartialProvider ??
+      function ({children}: PropsWithChildren) {
         return <Fragment>{children}</Fragment>;
       };
 
     // Register the component with React Native Navigation
     Navigation.registerComponent(
       route.name,
-      () => (props) => {
-        const { componetId, __flagship_app_router_url, ...data } = props;
+      () => props => {
+        const {componetId, __flagship_app_router_url, ...data} = props;
 
         return (
           <ErrorBoundary>
             <Provider>
-              <RouterContext.Provider
+              <RouteContext.Provider
                 value={{
-                  match,
+                  match: route,
                   url: new URL(__flagship_app_router_url), // Create a URL object from the route path
                   data,
-                }}
-              >
+                }}>
                 <ComponentIdContext.Provider value={componetId}>
                   <Component {...data} />
                 </ComponentIdContext.Provider>
-              </RouterContext.Provider>
+              </RouteContext.Provider>
             </Provider>
           </ErrorBoundary>
         );
@@ -144,7 +120,7 @@ class FlagshipAppRouter {
    * @param {Route} route - The route object containing the component and tab options.
    */
   protected registerBottomTab(route: Route) {
-    const { bottomTab, ...passOptions } = route.options!;
+    const {bottomTab} = route.options!;
 
     const tab: LayoutStack = {
       children: [
@@ -161,17 +137,16 @@ class FlagshipAppRouter {
 
     // Add the tab to the root layout
     this.layout = {
+      ...this.layout,
       root: {
         bottomTabs: {
           children: [
             ...(this.layout.root.bottomTabs?.children ?? []),
-            { stack: tab },
+            {stack: tab},
           ],
         },
       },
     };
-
-    this.registerScreen({ ...route, options: passOptions });
   }
 
   /**
@@ -179,21 +154,44 @@ class FlagshipAppRouter {
    *
    * @param {AppRouter} config - The configuration object containing routes, provider, and app launch callback.
    */
-  register({ onAppLaunched, routes, Provider }: AppRouter) {
-    this.onAppLaunched = onAppLaunched;
-    this.registeredRoutes = routes;
-
-    if (Provider) {
-      this.Provider = Provider;
-    }
+  register({onAppLaunched, routes, Provider}: AppRouter) {
+    this.routes = routes;
 
     // Register each route based on its options
-    routes.forEach((route) => {
-      if (route.options?.bottomTab) {
+    routes.forEach(route => {
+      const {bottomTab, ...passOptions} = route.options ?? {};
+
+      this.registerScreen({...route, options: passOptions}, Provider);
+
+      if (bottomTab) {
         this.registerBottomTab(route);
-      } else {
-        this.registerScreen(route);
       }
+    });
+
+    if (Object.keys(this.layout.root).length === 0) {
+      this.layout = {
+        ...this.layout,
+        root: {
+          stack: {
+            children: [
+              {
+                component: {
+                  name: routes[0].name,
+                },
+              },
+            ],
+          },
+        },
+      };
+    }
+
+    // Register the app launch event listener
+    Navigation.events().registerAppLaunchedListener(async () => {
+      if (onAppLaunched) {
+        await onAppLaunched().catch(() => {});
+      }
+
+      Navigation.setRoot(this.layout);
     });
   }
 
@@ -205,7 +203,7 @@ class FlagshipAppRouter {
    * @throws Will throw an error if no route is found for the given path.
    */
   pathToRouteName(path: string): string {
-    const route = this.registeredRoutes.find((route) => {
+    const route = this.routes.find(route => {
       const matches = match(route.path)(path);
 
       return matches;
