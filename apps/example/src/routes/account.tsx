@@ -1,20 +1,10 @@
-import {useNavigator} from '@brandingbrand/flagship-app-router';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 function Account() {
-  const navigator = useNavigator();
-
-  function onPress() {
-    navigator.open('/shop');
-  }
-
   return (
     <View style={styles.container}>
       <Text>/account</Text>
-      <TouchableOpacity onPress={onPress}>
-        <Text>push</Text>
-      </TouchableOpacity>
     </View>
   );
 }

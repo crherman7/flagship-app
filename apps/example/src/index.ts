@@ -60,5 +60,10 @@ register({
         },
       },
     },
+    {
+      name: 'applyDiscount',
+      path: '/cart/discount/:discount',
+      action: require('./routes/cart.discount.$discount').default,
+    },
   ],
 });

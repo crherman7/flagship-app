@@ -1,10 +1,20 @@
+import {useNavigator} from '@brandingbrand/flagship-app-router';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 function Cart() {
+  const navigator = useNavigator();
+
+  function onPress() {
+    navigator.open('/cart/discount/abc12345');
+  }
+
   return (
     <View style={styles.container}>
       <Text>/cart</Text>
+      <TouchableOpacity style={styles.button} onPress={onPress}>
+        <Text style={styles.text}>Apply Discount</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -14,6 +24,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 30,
+  },
+  button: {
+    backgroundColor: 'black',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  text: {
+    color: 'white',
   },
 });
 

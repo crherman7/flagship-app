@@ -19,7 +19,7 @@ export type Route = {
   /**
    * Optional action to be executed when the route is activated
    */
-  action?: () => Promise<void>;
+  action?: (...args: any) => Promise<void>;
 
   /**
    * The React component associated with the route

@@ -200,9 +200,11 @@ export function useNavigator() {
     if (!matchedRoute) return;
 
     // Perform any associated action with the matched route
-    await matchedRoute.action?.().catch(() => {
+    try {
+      await matchedRoute.action?.(path);
+    } catch (e) {
       // handle error (e.g., log it)
-    });
+    }
 
     // If there's no associated component, return
     if (!matchedRoute?.Component) return;
