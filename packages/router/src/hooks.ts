@@ -205,7 +205,7 @@ export function useNavigator() {
     });
 
     // If there's no associated component, return
-    if (matchedRoute?.Component) return;
+    if (!matchedRoute?.Component) return;
 
     // If the route is a bottom tab, pop to root
     if (isBottomTab(matchedRoute)) {
