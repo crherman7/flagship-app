@@ -5,6 +5,7 @@ import {Linking} from 'react-native';
 import {URL} from 'react-native-url-polyfill';
 
 import {ComponentIdContext, RouterContext} from './context';
+import {Route} from './types';
 
 /**
  * Custom hook to access the Router context.
@@ -127,6 +128,100 @@ export function useNavigator() {
   const route = useRoute();
 
   /**
+   * Determines if a given route is associated with a bottom tab.
+   *
+   * @param {Route} route - The route to check.
+   * @returns {boolean} True if the route is associated with a bottom tab, otherwise false.
+   *
+   * @example
+   * const route = { name: 'Home', Component: HomeComponent, options: { bottomTab: { text: 'Home' } } };
+   * const isTab = isBottomTab(route);
+   * console.log(isTab); // true
+   */
+  function isBottomTab(route: Route): boolean {
+    if (route.options?.bottomTab) {
+      return true;
+    }
+
+    if ((route.Component as any)?.options?.bottomTab) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Gets the index of a bottom tab for a given route.
+   *
+   * @param {Route} route - The route for which to get the bottom tab index.
+   * @param {Route[]} routes - The array of all routes.
+   * @returns {number} The index of the bottom tab.
+   *
+   * @example
+   * const routes = [
+   *   { name: 'Home', Component: HomeComponent, options: { bottomTab: { text: 'Home' } } },
+   *   { name: 'Profile', Component: ProfileComponent, options: { bottomTab: { text: 'Profile' } } },
+   * ];
+   * const index = getBottomTabIndex(routes[1], routes);
+   * console.log(index); // 1
+   */
+  function getBottomTabIndex(route: Route, routes: Route[]): number {
+    const index = routes
+      .filter(it => isBottomTab(it))
+      .reduce((acc, curr, index) => {
+        if (curr.name === route.name) {
+          return index;
+        }
+        return acc;
+      }, 0);
+
+    return index;
+  }
+
+  /**
+   * Opens a route based on the given path. If the route is associated with a bottom tab,
+   * it pops to the root tab, otherwise, it pushes the new route.
+   *
+   * @param {string} path - The path to navigate to.
+   * @param {Object} [passProps={}] - Optional properties to pass to the route.
+   * @param {Options} [options] - Optional navigation options.
+   *
+   * @example
+   * open('/profile', { userId: 123 }, { animated: true });
+   *
+   * @example
+   * open('/home');
+   */
+  async function open(path: string, passProps = {}, options?: Options) {
+    const matchedRoute = route.routes.find(it => {
+      return match(it.path)(path);
+    });
+
+    if (!matchedRoute) return;
+
+    // Perform any associated action with the matched route
+    await matchedRoute.action?.().catch(() => {
+      // handle error (e.g., log it)
+    });
+
+    // If there's no associated component, return
+    if (matchedRoute?.Component) return;
+
+    // If the route is a bottom tab, pop to root
+    if (isBottomTab(matchedRoute)) {
+      return popToRoot({
+        ...options,
+        bottomTabs: {
+          currentTabIndex: getBottomTabIndex(matchedRoute, route.routes),
+        },
+      });
+    }
+
+    // Otherwise, push the new route
+    return push(path, passProps, options);
+  }
+
+  /**
    * Push a new screen onto the navigation stack.
    *
    * @param {string} path - The path or route name to navigate to.
@@ -134,15 +229,15 @@ export function useNavigator() {
    * @param {Options} [options] - Optional navigation options for customizing the transition.
    */
   async function push(path: string, passProps = {}, options?: Options) {
-    const routeMapKey = Object.keys(route.routeMap).find(key => {
-      return match(key)(path);
+    const matchedRoute = route.routes.find(it => {
+      return match(it.path)(path);
     });
 
-    if (!routeMapKey) return;
+    if (!matchedRoute) return;
 
     return Navigation.push(componentId, {
       component: {
-        name: route.routeMap[routeMapKey],
+        name: matchedRoute.name,
         passProps: {
           ...passProps,
           __flagship_app_router_url: path, // Inject the URL path as a special prop
@@ -198,6 +293,7 @@ export function useNavigator() {
   }
 
   return {
+    open,
     push,
     pop,
     popToRoot,
@@ -240,7 +336,7 @@ export function useLinking() {
       const parsedURL = new URL(url);
 
       // Navigates to the parsed URL's pathname and search params
-      navigator.push(parsedURL.pathname + parsedURL.search);
+      navigator.open(parsedURL.pathname + parsedURL.search);
     } catch (e) {
       // Handle the error (e.g., log it)
     }

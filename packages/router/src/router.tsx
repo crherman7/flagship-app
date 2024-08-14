@@ -26,9 +26,8 @@ import {ComponentIdContext, RouterContext} from './context';
  */
 function register({routes, onAppLaunched, Provider = Fragment}: AppRouter) {
   const layout: LayoutRoot = createInitialLayout();
-  const routeMap = createRouteMap(routes);
 
-  routes.forEach(route => registerRoute(route, layout, routeMap, Provider));
+  routes.forEach(route => registerRoute(route, layout, Provider, routes));
 
   setRootLayout(layout, routes, onAppLaunched);
 }
@@ -88,8 +87,8 @@ function createRouteMap(routes: Route[]): Record<string, string> {
 function registerRoute(
   route: Route,
   layout: LayoutRoot,
-  routeMap: Record<string, string>,
   Provider: React.ComponentType,
+  routes: Route[],
 ): void {
   const {bottomTab, ...passOptions} = route.options ?? {};
   const {ErrorBoundary = Fragment, Component} = route;
@@ -103,7 +102,7 @@ function registerRoute(
   Navigation.registerComponent(
     route.name,
     () => props =>
-      renderComponent(route, props, Provider, routeMap, ErrorBoundary),
+      renderComponent(route, props, Provider, ErrorBoundary, routes),
     () => Component,
   );
 
@@ -136,8 +135,8 @@ function renderComponent(
   route: Route,
   props: any,
   Provider: React.ComponentType<any>,
-  routeMap: Record<string, string>,
   ErrorBoundary: React.ComponentType<any>,
+  routes: Route[],
 ) {
   const {componentId, __flagship_app_router_url, ...data} = props;
 
@@ -165,7 +164,7 @@ function renderComponent(
             name: route.name,
             url,
             data,
-            routeMap,
+            routes,
           }}>
           <ComponentIdContext.Provider value={componentId}>
             <Component />

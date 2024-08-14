@@ -76,7 +76,7 @@ export type Match = {
   data: unknown;
 
   /**
-   *
+   * Array of routes to be registered with the router
    */
-  routeMap: Record<string, string>;
+  routes: Route[];
 };
