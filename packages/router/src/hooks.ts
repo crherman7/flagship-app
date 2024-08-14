@@ -2,9 +2,9 @@ import {match} from 'path-to-regexp';
 import {useContext, useEffect} from 'react';
 import {Layout, Navigation, Options} from 'react-native-navigation';
 import {Linking} from 'react-native';
+import {URL} from 'react-native-url-polyfill';
 
 import {ComponentIdContext, RouterContext} from './context';
-import {URL} from 'react-native-url-polyfill';
 
 /**
  * Custom hook to access the Router context.
@@ -249,8 +249,13 @@ export function useLinking() {
   useEffect(() => {
     // Check the initial URL when the app is launched
     (async function () {
-      const url = await Linking.getInitialURL();
-      callback({url});
+      try {
+        const url = await Linking.getInitialURL();
+
+        callback({url});
+      } catch (e) {
+        // Handle the error (e.g., log it)
+      }
     })();
 
     // Listen for any URL events and handle them with the callback
