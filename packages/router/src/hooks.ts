@@ -2,8 +2,7 @@ import {match} from 'path-to-regexp';
 import {useContext} from 'react';
 import {Layout, Navigation, Options} from 'react-native-navigation';
 
-import {RouteContext, ComponentIdContext} from './context';
-import FlagshipAppRouter from './FlagshipAppRouter';
+import {ComponentIdContext, RouterContext} from './context';
 
 /**
  * Custom hook to access the Router context.
@@ -12,7 +11,7 @@ import FlagshipAppRouter from './FlagshipAppRouter';
  * @throws Will throw an error if the hook is used outside of a RouterContext.Provider.
  */
 export function useRoute() {
-  const state = useContext(RouteContext);
+  const state = useContext(RouterContext);
 
   if (!state) {
     throw new Error(
@@ -54,7 +53,7 @@ export function usePathParams() {
 
   // Match the current URL pathname against the router's path pattern
   try {
-    const matches = match(route.match.path)(route.url.pathname);
+    const matches = match(route.path)(route.url.pathname);
 
     if (!matches) {
       throw new Error('no matches for path params');
@@ -123,6 +122,7 @@ export function useRouteData<T>(): T {
  */
 export function useNavigator() {
   const componentId = useComponentId();
+  const route = useRoute();
 
   /**
    * Push a new screen onto the navigation stack.
@@ -132,15 +132,15 @@ export function useNavigator() {
    * @param {Options} [options] - Optional navigation options for customizing the transition.
    */
   async function push(path: string, passProps = {}, options?: Options) {
-    const route = FlagshipAppRouter.shared.pathToRoute(path);
+    const routeMapKey = Object.keys(route.routeMap).find(key => {
+      return match(key)(path);
+    });
 
-    if (route.action) {
-      await route.action().catch(() => {});
-    }
+    if (!routeMapKey) return;
 
     return Navigation.push(componentId, {
       component: {
-        name: route.name,
+        name: route.routeMap[routeMapKey],
         passProps: {
           ...passProps,
           __flagship_app_router_url: path, // Inject the URL path as a special prop

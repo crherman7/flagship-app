@@ -58,10 +58,42 @@ export type AppRouter = {
   /**
    * Optional provider component for wrapping the application
    */
-  Provider?: React.ComponentType;
+  Provider?: React.ComponentType<any>;
+
+  /**
+   * Optional provider component for wrapping the application
+   */
+  PartialProvider?: React.ComponentType<any>;
 
   /**
    * Optional callback for when the app is launched
    */
   onAppLaunched?: () => Promise<void>;
+};
+
+export type Match = {
+  /**
+   * The name of the route, used for registration with React Native Navigation
+   */
+  name: string;
+
+  /**
+   * The path pattern associated with the route
+   */
+  path: string;
+
+  /**
+   * Type representing the URL object
+   */
+  url: URL | null;
+
+  /**
+   * Type representing any data associated with the router
+   */
+  data: unknown;
+
+  /**
+   *
+   */
+  routeMap: Record<string, string>;
 };

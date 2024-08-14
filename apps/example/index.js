@@ -1,8 +1,8 @@
-import {FlagshipAppRouter} from '@brandingbrand/flagship-app-router';
+import {register} from '@brandingbrand/flagship-app-router';
 
 import App from './App';
 
-FlagshipAppRouter.register({
+register({
   routes: [
     {
       name: 'com.myApp.WelcomeScreen',
