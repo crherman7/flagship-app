@@ -7,7 +7,7 @@ register({
     {
       name: 'com.myApp.WelcomeScreen',
       Component: App,
-      path: 'app://root',
+      path: '/root',
       options: {
         topBar: {
           visible: false,

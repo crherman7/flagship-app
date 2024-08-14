@@ -146,10 +146,13 @@ function renderComponent(
 
   // Memoize the URL if provided
   const url = useMemo(() => {
-    if (__flagship_app_router_url) {
-      return new URL(__flagship_app_router_url);
-    }
-    return null;
+    if (!__flagship_app_router_url) return null;
+
+    if (/^\S+:\/\//gm.test(__flagship_app_router_url))
+      return __flagship_app_router_url;
+
+    // TODO: use react-native-device-info to get bundleId / packageName as we use URL polyfill requiring standard URL
+    return `app://${__flagship_app_router_url}`;
   }, [__flagship_app_router_url]);
 
   // Render the component wrapped with ErrorBoundary, Provider, RouterContext, and ComponentIdContext
