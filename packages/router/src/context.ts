@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Match, MatchedRoute} from './types';
+import {Match} from './types';
 
 /**
  * React context to provide a unique component identifier.

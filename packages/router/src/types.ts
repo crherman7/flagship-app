@@ -32,23 +32,6 @@ export type Route = {
   ErrorBoundary?: React.ComponentType;
 };
 
-export type MatchedRoute = {
-  /**
-   * Type representing the match object from the router
-   */
-  match: Route;
-
-  /**
-   * Type representing the URL object
-   */
-  url: URL | null;
-
-  /**
-   * Type representing any data associated with the router
-   */
-  data: unknown;
-};
-
 export type AppRouter = {
   /**
    * Array of routes to be registered with the router
