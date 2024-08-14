@@ -25,5 +25,5 @@ export const RouterContext = React.createContext<Match | null>(null);
 // Assign a display name to the RouteContext for easier debugging in development
 // eslint-disable-next-line no-undef
 if (__DEV__) {
-  RouterContext.displayName = 'RouteContext';
+  RouterContext.displayName = 'RouterContext';
 }
