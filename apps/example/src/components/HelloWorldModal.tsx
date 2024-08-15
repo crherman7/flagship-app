@@ -1,27 +1,23 @@
-import {useLinking, useNavigator} from '@brandingbrand/flagship-app-router';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import HelloWorldModal from '../components/HelloWorldModal';
+import {useModal} from '@brandingbrand/flagship-app-router';
 
-function Home() {
-  useLinking();
-  const {showModal} = useNavigator();
+const HelloWorldModal = () => {
+  const {resolve} = useModal();
 
   async function onPress() {
-    try {
-      await showModal(HelloWorldModal, {});
-    } catch (e) {}
+    resolve('blah');
   }
 
   return (
     <View style={styles.container}>
-      <Text>/home</Text>
+      <Text>HelloWorldModal</Text>
       <TouchableOpacity style={styles.button} onPress={onPress}>
-        <Text style={styles.text}>Show Modal</Text>
+        <Text style={styles.text}>Close Modal</Text>
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -41,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default HelloWorldModal;

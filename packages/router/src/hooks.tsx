@@ -20,11 +20,26 @@ export function useRoute() {
 
   if (!state) {
     throw new Error(
-      'useRouterContext must be used inside a AppRouterURLContext.Provider',
+      'useRoute must be used inside a AppRouterURLContext.Provider',
     );
   }
 
   return state;
+}
+
+export function useModal<T, U>() {
+  const state = useContext(ModalContext);
+  const componentId = useComponentId();
+
+  if (!state) {
+    throw new Error('useModal must be used inside a ModalContext.Provider');
+  }
+
+  return {
+    data: state.data as T,
+    resolve: state.resolve(componentId) as (result: U) => U,
+    reject: state.reject(componentId) as () => void,
+  };
 }
 
 /**
@@ -322,12 +337,11 @@ export function useNavigator() {
         const {componentId, resolve, reject, ...passProps} = props;
 
         return (
-          // Provide the modal context with resolve, reject, and data.
-          <ModalContext.Provider value={{resolve, reject, data: passProps}}>
-            <ComponentIdContext.Provider value={componentId}>
+          <ComponentIdContext.Provider value={componentId}>
+            <ModalContext.Provider value={{resolve, reject, data: passProps}}>
               <Component />
-            </ComponentIdContext.Provider>
-          </ModalContext.Provider>
+            </ModalContext.Provider>
+          </ComponentIdContext.Provider>
         );
       },
       () => Component,
@@ -336,15 +350,21 @@ export function useNavigator() {
     // Return a promise that resolves or rejects based on modal dismissal.
     return new Promise((res, rej) => {
       // Define the resolve function that dismisses the modal and resolves the promise.
-      async function resolve(data: U) {
-        await Navigation.dismissModal(componentId);
-        res(data);
+      function resolve(componentId: string) {
+        return (data: U) => {
+          res(data);
+
+          Navigation.dismissModal(componentId);
+        };
       }
 
       // Define the reject function that dismisses the modal and rejects the promise.
-      async function reject() {
-        await Navigation.dismissModal(componentId);
-        rej();
+      function reject(componentId: string) {
+        return () => {
+          rej();
+
+          Navigation.dismissModal(componentId);
+        };
       }
 
       // Show the modal using React Native Navigation with the provided options.

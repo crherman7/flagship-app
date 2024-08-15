@@ -82,7 +82,7 @@ export type Match = {
 };
 
 export type ModalData<T, U> = {
-  resolve: (result: U) => Promise<U>;
-  reject: () => Promise<void>;
+  resolve: (componentId: string) => (result: U) => U;
+  reject: (componentId: string) => () => void;
   data: T;
 };
