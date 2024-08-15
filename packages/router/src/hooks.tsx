@@ -84,7 +84,7 @@ export function useModal<T, U>() {
     data: state.data as T,
 
     // A function to resolve the modal with a result of type U
-    resolve: state.resolve(componentId) as (result: U) => U,
+    resolve: state.resolve(componentId) as (result: U) => void,
 
     // A function to reject the modal, closing it without returning a result
     reject: state.reject(componentId) as () => void,
