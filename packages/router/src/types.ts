@@ -81,8 +81,28 @@ export type Match = {
   routes: Route[];
 };
 
+/**
+ * Represents the data structure for a modal component.
+ * @template T The type of data passed to the modal.
+ * @template U The type of result returned by the modal.
+ */
 export type ModalData<T, U> = {
+  /**
+   * A function that returns another function to resolve the modal with a result.
+   * @param componentId The unique identifier of the modal component.
+   * @returns A function that takes a result and returns it.
+   */
   resolve: (componentId: string) => (result: U) => U;
+
+  /**
+   * A function that returns another function to reject or close the modal without a result.
+   * @param componentId The unique identifier of the modal component.
+   * @returns A function that closes the modal without returning a result.
+   */
   reject: (componentId: string) => () => void;
+
+  /**
+   * The data passed to the modal component.
+   */
   data: T;
 };
