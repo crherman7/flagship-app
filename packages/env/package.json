@@ -2,13 +2,19 @@
   "name": "@brandingbrand/flagship-app-env",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "license": "ISC",
+  "homepage": "#readme",
+  "author": "Chris Herman",
+  "keywords": [],
+  "main": "src/index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "Chris Herman",
-  "license": "ISC",
+  "create-react-native-library": {
+    "type": "module-legacy",
+    "languages": "kotlin-swift",
+    "version": "0.40.0"
+  },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"

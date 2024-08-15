@@ -2,6 +2,9 @@
   "name": "example",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -31,8 +34,5 @@
     "prettier": "2.8.8",
     "react-test-renderer": "18.2.0",
     "typescript": "5.0.4"
-  },
-  "engines": {
-    "node": ">=18"
   }
 }
