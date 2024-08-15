@@ -7,6 +7,16 @@ import {URL} from 'react-native-url-polyfill';
 import {ComponentIdContext, ModalContext, RouterContext} from './context';
 import {Route} from './types';
 
+/**
+ * Counter used for generating unique IDs.
+ *
+ * This variable keeps track of the last assigned ID and is incremented
+ * each time a new ID is generated. It ensures that each generated ID
+ * is unique within the current session or application lifecycle.
+ *
+ * @type {number}
+ * @default 0
+ */
 let idCounter = 0;
 
 /**

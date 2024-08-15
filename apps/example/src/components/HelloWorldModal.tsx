@@ -37,4 +37,10 @@ const styles = StyleSheet.create({
   },
 });
 
+HelloWorldModal.options = {
+  topBar: {
+    visible: false,
+  },
+};
+
 export default HelloWorldModal;
