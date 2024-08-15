@@ -80,3 +80,9 @@ export type Match = {
    */
   routes: Route[];
 };
+
+export type ModalData<T, U> = {
+  resolve: (result: U) => Promise<U>;
+  reject: () => Promise<void>;
+  data: T;
+};

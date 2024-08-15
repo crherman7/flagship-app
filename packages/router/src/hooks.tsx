@@ -4,8 +4,10 @@ import {Layout, Navigation, Options} from 'react-native-navigation';
 import {Linking} from 'react-native';
 import {URL} from 'react-native-url-polyfill';
 
-import {ComponentIdContext, RouterContext} from './context';
+import {ComponentIdContext, ModalContext, RouterContext} from './context';
 import {Route} from './types';
+
+let idCounter = 0;
 
 /**
  * Custom hook to access the Router context.
@@ -286,12 +288,87 @@ export function useNavigator() {
   }
 
   /**
-   * Show a modal screen.
+   * Displays a modal with the specified component and data, and returns a promise
+   * that resolves when the modal is dismissed.
    *
-   * TODO: Implement the logic for displaying a modal screen.
+   * @template T - The type of data passed to the modal.
+   * @template U - The type of data returned when the modal is resolved.
+   *
+   * @param Component - The React component to render inside the modal.
+   * @param data - The data to pass to the modal component.
+   * @param options - Additional options for displaying the modal.
+   *
+   * @returns A promise that resolves with the data returned from the modal when it's dismissed.
+   *
+   * @example
+   * ```typescript
+   * const result = await showModal<MyComponentProps, ResultType>(MyComponent, { prop1: 'value' }, { modalOptions: true });
+   * console.log('Modal result:', result);
+   * ```
    */
-  function showModal() {
-    // TODO: implement showModal logic
+  async function showModal<T, U>(
+    Component: React.ComponentType,
+    data: T,
+    options: Options = {},
+  ): Promise<U> {
+    // Generate a unique name for the modal component.
+    const name = `modal_${idCounter}`;
+    idCounter++;
+
+    // Register the modal component with React Native Navigation.
+    Navigation.registerComponent(
+      name,
+      () => props => {
+        const {componentId, resolve, reject, ...passProps} = props;
+
+        return (
+          // Provide the modal context with resolve, reject, and data.
+          <ModalContext.Provider value={{resolve, reject, data: passProps}}>
+            <ComponentIdContext.Provider value={componentId}>
+              <Component />
+            </ComponentIdContext.Provider>
+          </ModalContext.Provider>
+        );
+      },
+      () => Component,
+    );
+
+    // Return a promise that resolves or rejects based on modal dismissal.
+    return new Promise((res, rej) => {
+      // Define the resolve function that dismisses the modal and resolves the promise.
+      async function resolve(data: U) {
+        await Navigation.dismissModal(componentId);
+        res(data);
+      }
+
+      // Define the reject function that dismisses the modal and rejects the promise.
+      async function reject() {
+        await Navigation.dismissModal(componentId);
+        rej();
+      }
+
+      // Show the modal using React Native Navigation with the provided options.
+      Navigation.showModal({
+        stack: {
+          children: [
+            {
+              component: {
+                name,
+                passProps: {
+                  ...data,
+                  resolve,
+                  reject,
+                },
+                options: {
+                  ...((Component as any).options ?? {}),
+                  ...options,
+                },
+              },
+            },
+          ],
+        },
+      });
+    });
   }
 
   return {

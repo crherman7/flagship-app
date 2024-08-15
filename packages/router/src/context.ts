@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Match} from './types';
+import {Match, ModalData} from './types';
 
 /**
  * React context to provide a unique component identifier.
@@ -26,4 +26,24 @@ export const RouterContext = React.createContext<Match | null>(null);
 // eslint-disable-next-line no-undef
 if (__DEV__) {
   RouterContext.displayName = 'RouterContext';
+}
+
+/**
+ * Context for managing modal data and actions, such as resolve and reject.
+ *
+ * This context is designed to be used with modal components that require dynamic
+ * data types. The `ModalData` type is parameterized with `unknown` to allow any
+ * type of data to be passed and returned, ensuring type safety and flexibility.
+ *
+ * @type {React.Context<ModalData<unknown, unknown> | null>}
+ */
+export const ModalContext = React.createContext<ModalData<
+  unknown,
+  unknown
+> | null>(null);
+
+// Assign a display name to the ModalContext for easier debugging in development
+// eslint-disable-next-line no-undef
+if (__DEV__) {
+  ModalContext.displayName = 'ModalContext';
 }

@@ -1,7 +1,10 @@
+import {useLinking} from '@brandingbrand/flagship-app-router';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 function Home() {
+  useLinking();
+
   return (
     <View style={styles.container}>
       <Text>/home</Text>
