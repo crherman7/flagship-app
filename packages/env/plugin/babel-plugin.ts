@@ -17,19 +17,48 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
     throw new Error('unable to find .flagshipappenvrc configuration file');
   }
 
+  const {
+    dir,
+    hiddenEnvs = [],
+    singleEnv,
+  } = result.config as {
+    dir: string;
+    singleEnv?: string;
+    hiddenEnvs?: string[];
+  };
+
   const envFiles = fs
-    .readdirSync(path.resolve(process.cwd(), result.config.path))
+    .readdirSync(path.resolve(process.cwd(), dir))
     .filter(it => /^env\.\w+\.ts/gm.test(it))
+    .filter(it => {
+      const regex = new RegExp(/^env\.(\w+)\.ts/gm);
+
+      const match = regex.exec(it);
+
+      if (!match) {
+        return false;
+      }
+
+      return !hiddenEnvs.includes(match[0]);
+    })
     .map(file => {
-      return path.resolve(process.cwd(), result.config.path, file);
+      return path.resolve(process.cwd(), dir, file);
     });
 
   const envs = envFiles.reduce((acc, curr) => {
     const env = defaultLoadersSync['.ts'](curr, fs.readFileSync(curr, 'utf-8'));
 
-    const envName = curr.split('/').reverse()[0].split('.')[1];
+    const regex = new RegExp(/^env\.(\w+)\.ts/gm);
 
-    return {...acc, [envName]: env};
+    const match = regex.exec(curr);
+
+    if (!match) {
+      return acc;
+    }
+
+    const envName = match[0];
+
+    return {...acc, [envName]: env.default};
   }, {});
 
   function convertToBabelAST(value: Object): any {
