@@ -32,22 +32,30 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
     return {...acc, [envName]: env};
   }, {});
 
-  function convertToBabelAST(obj: Object): any {
-    if (Array.isArray(obj)) {
-      return obj.map(convertToBabelAST);
-    } else if (obj === null || typeof obj !== 'object') {
-      // Handle primitive types
-      return t.valueToNode(obj);
+  function convertToBabelAST(value: Object): any {
+    if (Array.isArray(value)) {
+      return t.arrayExpression(value.map(convertToBabelAST));
+    } else if (value === null) {
+      return t.nullLiteral();
+    } else if (typeof value === 'undefined') {
+      return t.identifier('undefined');
+    } else if (typeof value === 'boolean') {
+      return t.booleanLiteral(value);
+    } else if (typeof value === 'number') {
+      return t.numericLiteral(value);
+    } else if (typeof value === 'string') {
+      return t.stringLiteral(value);
+    } else if (typeof value === 'object') {
+      // Handle objects
+      const properties = Object.keys(value).map(key => {
+        const propValue = convertToBabelAST((value as any)[key]) as any;
+        return t.objectProperty(t.stringLiteral(key), propValue);
+      });
+
+      return t.objectExpression(properties);
+    } else {
+      throw new Error(`Unsupported type: ${typeof value}`);
     }
-
-    // Handle objects
-    const properties = Object.keys(obj).map(key => {
-      const value = convertToBabelAST((obj as any)[key]) as any;
-
-      return t.objectProperty(t.stringLiteral(key), value);
-    });
-
-    return t.objectExpression(properties);
   }
 
   return {
