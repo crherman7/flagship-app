@@ -32,6 +32,24 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
     return {...acc, [envName]: env};
   }, {});
 
+  function convertToBabelAST(obj: Object): any {
+    if (Array.isArray(obj)) {
+      return obj.map(convertToBabelAST);
+    } else if (obj === null || typeof obj !== 'object') {
+      // Handle primitive types
+      return t.valueToNode(obj);
+    }
+
+    // Handle objects
+    const properties = Object.keys(obj).map(key => {
+      const value = convertToBabelAST((obj as any)[key]) as any;
+
+      return t.objectProperty(t.stringLiteral(key), value);
+    });
+
+    return t.objectExpression(properties);
+  }
+
   return {
     visitor: {
       MemberExpression({node, parentPath: parent}) {
@@ -55,7 +73,7 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
           !parent.parentPath?.isAssignmentExpression()
         ) {
           // TODO: replace with envs object
-          parent.replaceWith(t.stringLiteral(''));
+          parent.replaceWith(convertToBabelAST(envs));
         }
       },
     },
