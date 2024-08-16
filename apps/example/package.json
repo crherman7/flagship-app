@@ -13,6 +13,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@brandingbrand/flagship-app-env": "workspace:*",
     "@brandingbrand/flagship-app-router": "workspace:*",
     "react": "18.2.0",
     "react-native": "0.73.9",

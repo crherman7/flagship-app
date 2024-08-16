@@ -1,4 +1,5 @@
 import {register} from '@brandingbrand/flagship-app-router';
+import {env, setEnv, envs} from '@brandingbrand/flagship-app-env';
 
 import assets from './assets';
 

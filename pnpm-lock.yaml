@@ -22,6 +22,9 @@ importers:
 
   apps/example:
     dependencies:
+      '@brandingbrand/flagship-app-env':
+        specifier: workspace:*
+        version: link:../../packages/env
       '@brandingbrand/flagship-app-router':
         specifier: workspace:*
         version: link:../../packages/router
@@ -5462,7 +5465,10 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/preset-env'
+      - bufferutil
+      - encoding
       - supports-color
+      - utf-8-validate
 
   '@react-native/normalize-colors@0.73.2': {}
 
