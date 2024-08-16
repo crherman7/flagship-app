@@ -86,12 +86,18 @@ importers:
 
   packages/env:
     devDependencies:
+      '@babel/core':
+        specifier: 7.25.2
+        version: 7.25.2
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/babel__core':
+        specifier: ^7.20.5
+        version: 7.20.5
       '@types/node':
         specifier: ^22.3.0
         version: 22.3.0

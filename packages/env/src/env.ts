@@ -58,7 +58,7 @@ export async function setEnv(envName: string) {
  * ```
  */
 // eslint-disable-next-line turbo/no-undeclared-env-vars
-export const envs = process.env.FLAGSHIP_ENV;
+export const envs = process.env.FLAGSHIP_APP_ENV;
 
 /**
  * The environment configuration for the current environment name.
