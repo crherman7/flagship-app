@@ -4,7 +4,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "es2015",
-    "types": ["react-native"],
+    "types": ["node", "react-native"],
     "lib": [
       "es2019",
       "es2020.bigint",
