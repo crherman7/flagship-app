@@ -6,11 +6,4 @@ RCT_EXTERN_METHOD(setEnv:(NSString *)name
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-+ (NSDictionary *)constantsToExport;
-
-+ (BOOL)requiresMainQueueSetup
-{
-  return NO;
-}
-
 @end

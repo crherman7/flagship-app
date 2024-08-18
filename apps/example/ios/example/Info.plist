@@ -48,5 +48,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
   <false/>
+	<key>FlagshipDevMenu</key>
+	<true/>
+	<key>FlagshipEnv</key>
+	<string>prod</string>
 </dict>
 </plist>

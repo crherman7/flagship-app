@@ -4,6 +4,7 @@ class FlagshipEnv: NSObject {
     return "FlagshipEnv"
   }
 
+  @objc
   static func requiresMainQueueSetup() -> Bool {
     return false
   }

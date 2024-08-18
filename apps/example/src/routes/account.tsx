@@ -1,7 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {NativeModules, StyleSheet, Text, View} from 'react-native';
 
 function Account() {
+  console.log('NativeModules: ', NativeModules.FlagshipEnv.getConstants());
   return (
     <View style={styles.container}>
       <Text>/account</Text>
