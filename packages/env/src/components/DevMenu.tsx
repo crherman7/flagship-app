@@ -1,10 +1,11 @@
 import React, {Fragment, PropsWithChildren} from 'react';
 
-import {DevMenuContext} from '../context';
+import {DevMenuContext, ModalContextProvider} from '../context';
 import {DevMenuType} from '../types';
 import {showDevMenu} from '../env';
 
 import {VersionOverlay} from './VersionOverlay';
+import {DevMenuModal} from './DevMenuModal';
 
 export namespace DevMenu {
   export type Props = DevMenuType & VersionOverlay.Props & PropsWithChildren;
@@ -18,7 +19,10 @@ export function DevMenu({children, location, ...props}: DevMenu.Props) {
   return (
     <DevMenuContext.Provider value={props}>
       {children}
-      <VersionOverlay location={location} />
+      <ModalContextProvider>
+        <VersionOverlay location={location} />
+        <DevMenuModal />
+      </ModalContextProvider>
     </DevMenuContext.Provider>
   );
 }

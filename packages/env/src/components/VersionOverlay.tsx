@@ -2,6 +2,7 @@ import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 import {envName} from '../env';
+import {useModal} from '../context';
 
 export namespace VersionOverlay {
   export type Props = {
@@ -12,10 +13,16 @@ export namespace VersionOverlay {
 export function VersionOverlay({
   location = 'bottomRight',
 }: VersionOverlay.Props) {
+  const [_, setVisible] = useModal();
+
   const s = styles({location});
 
+  function onPress() {
+    setVisible(true);
+  }
+
   return (
-    <TouchableOpacity style={s.container}>
+    <TouchableOpacity onPress={onPress} style={s.container}>
       <Text style={s.text}>{`env: ${envName}`}</Text>
       {/**
        * TODO: add version from `react-native-device-info`
