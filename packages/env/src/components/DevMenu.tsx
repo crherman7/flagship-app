@@ -1,4 +1,4 @@
-import React, {PropsWithChildren} from 'react';
+import React, {Fragment, PropsWithChildren} from 'react';
 
 import {DevMenuContext} from '../context';
 import {DevMenuType} from '../types';
@@ -11,10 +11,14 @@ export namespace DevMenu {
 }
 
 export function DevMenu({children, location, ...props}: DevMenu.Props) {
+  if (!showDevMenu) {
+    return <Fragment>{children}</Fragment>;
+  }
+
   return (
     <DevMenuContext.Provider value={props}>
       {children}
-      {!!showDevMenu && <VersionOverlay location={location} />}
+      <VersionOverlay location={location} />
     </DevMenuContext.Provider>
   );
 }
