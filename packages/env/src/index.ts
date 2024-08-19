@@ -57,4 +57,4 @@ export * from './lib/env';
  * );
  * ```
  */
-export * from './components';
+export * from './components/DevMenu';

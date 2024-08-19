@@ -11,6 +11,8 @@ import React from 'react';
 import {useDevMenu} from '../lib/hooks';
 import {useScreen} from '../lib/context';
 import {EnvSwitcher} from '../screens/EnvSwitcher';
+import {AsyncStorage} from '../screens/AsyncStorage';
+import {SensitiveInfo} from '../screens/SensitiveInfo';
 
 export function DevMenuList() {
   const {screens = []} = useDevMenu();
@@ -46,8 +48,9 @@ export function DevMenuList() {
     <FlatList
       renderItem={renderItem}
       style={styles.container}
-      data={[...screens, EnvSwitcher]}
+      data={[...screens, EnvSwitcher, AsyncStorage, SensitiveInfo]}
       ItemSeparatorComponent={DevMenuListItemSeparatorComponent}
+      ListFooterComponent={DevMenuListItemSeparatorComponent}
     />
   );
 }
