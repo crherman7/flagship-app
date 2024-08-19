@@ -148,3 +148,6 @@ if (__DEV__) {
  * ```
  */
 export const [useModal, ModalContextProvider] = createStateContext(false);
+
+export const [useScreen, ScreenContextProvder] =
+  createStateContext<JSX.Element | null>(null);

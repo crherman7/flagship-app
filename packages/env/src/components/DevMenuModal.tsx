@@ -6,10 +6,16 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
-import React from 'react';
+import React, {Fragment, useMemo} from 'react';
 
-import {useModal} from '../context';
+import {useModal, useScreen} from '../context';
+import {useDevMenu} from '../hooks';
+import {EnvSwitcher} from '../screens/EnvSwitcher';
+
+import {DevMenuModalFooter} from './DevMenuModalFooter';
+import {DevMenuModalHeader} from './DevMenuModalHeader';
 
 const DEFAULT_MODAL_PROPS: ModalProps = {
   /**
@@ -28,37 +34,61 @@ const DEFAULT_MODAL_PROPS: ModalProps = {
 };
 
 export function DevMenuModal() {
-  const [visible, setVisible] = useModal();
+  const [visible] = useModal();
+  const {screens = []} = useDevMenu();
+  const [Screen, setScreen] = useScreen();
 
-  function onRequestClose() {
-    setVisible(false);
-  }
+  const devMenuScreens = useMemo(() => {
+    return [...screens, EnvSwitcher];
+  }, [screens]);
 
-  function onClose() {
-    setVisible(false);
-  }
+  const isScreenSet = useMemo(() => !!Screen, [Screen]);
 
-  function onRestart() {
-    // TODO: add restart package and execute restart bundle
+  function onItemPress(Component: React.ComponentType<any> | null) {
+    return () => {
+      if (Component == null) {
+        return setScreen(null);
+      }
+
+      const RenderedComponent = <Component />;
+
+      setScreen(RenderedComponent);
+    };
   }
 
   return (
-    <Modal
-      {...DEFAULT_MODAL_PROPS}
-      visible={visible}
-      onRequestClose={onRequestClose}>
+    <Modal {...DEFAULT_MODAL_PROPS} visible={visible}>
       <SafeAreaView style={styles.safeAreaContainer}>
-        <View style={styles.container}>
-          <Text>DevMenuModal</Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={onClose}>
-            <Text style={styles.text}>Close</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.text}>Restart</Text>
-          </TouchableOpacity>
-        </View>
+        <DevMenuModalHeader />
+        {isScreenSet ? (
+          <Fragment>{Screen}</Fragment>
+        ) : (
+          <FlatList
+            ItemSeparatorComponent={() => (
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
+                  backgroundColor: 'lightgrey',
+                }}
+              />
+            )}
+            style={styles.container}
+            data={devMenuScreens}
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity
+                  style={styles.rowContainer}
+                  key={item.name}
+                  onPress={onItemPress(item)}>
+                  <Text>{item.name}</Text>
+                  <Text>{`>`}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )}
+        <DevMenuModalFooter />
       </SafeAreaView>
     </Modal>
   );
@@ -71,24 +101,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  buttonContainer: {
+  rowContainer: {
+    height: 64,
     width: '100%',
-    borderTopWidth: 1,
-    borderTopColor: 'lightgrey',
-    padding: 20,
+    justifyContent: 'space-between',
+    paddingHorizontal: 36,
     flexDirection: 'row',
-    gap: 20,
-  },
-  button: {
-    borderRadius: 12,
-    backgroundColor: 'black',
-    height: 48,
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  text: {
-    color: 'white',
-    fontSize: 12,
   },
 });
