@@ -1,8 +1,10 @@
 import React from 'react';
-import {NativeModules, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {env} from '@brandingbrand/flagship-app-env';
 
 function Account() {
-  console.log('NativeModules: ', NativeModules.FlagshipEnv.getConstants());
+  console.log('🚀 ~ env:', env);
+
   return (
     <View style={styles.container}>
       <Text>/account</Text>

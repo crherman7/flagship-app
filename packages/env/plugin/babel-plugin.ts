@@ -7,11 +7,13 @@ import {cosmiconfigSync, defaultLoadersSync} from 'cosmiconfig';
 const NODE_PROCESS_IDENTIFIER = 'process';
 const NODE_PROCESS_ENV_IDENTIFIER = 'env';
 const FLAGSHIP_APP_ENV_IDENTIFIER = 'FLAGSHIP_APP_ENV';
-const MODULE_NAME = '.flagshipappenvrc';
+const MODULE_NAME = 'flagshipappenvrc';
 
 export default function ({types: t}: typeof Babel): Babel.PluginObj {
   const explorerSync = cosmiconfigSync(MODULE_NAME);
-  const result = explorerSync.search(process.cwd());
+  const result = explorerSync.load(
+    path.resolve(process.cwd(), '.' + MODULE_NAME),
+  );
 
   if (result === null || result.isEmpty) {
     throw new Error('unable to find .flagshipappenvrc configuration file');
@@ -48,7 +50,7 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
   const envs = envFiles.reduce((acc, curr) => {
     const env = defaultLoadersSync['.ts'](curr, fs.readFileSync(curr, 'utf-8'));
 
-    const regex = new RegExp(/^env\.(\w+)\.ts/gm);
+    const regex = new RegExp(/env\.(\w+)\.ts/gm);
 
     const match = regex.exec(curr);
 
@@ -56,9 +58,9 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
       return acc;
     }
 
-    const envName = match[0];
+    const envName = match[1];
 
-    return {...acc, [envName]: env.default};
+    return {...acc, [envName]: env};
   }, {});
 
   function convertToBabelAST(value: Object): any {
@@ -106,8 +108,7 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
         if (
           t.isIdentifier(parent.node.property, {
             name: FLAGSHIP_APP_ENV_IDENTIFIER,
-          }) &&
-          !parent.parentPath?.isAssignmentExpression()
+          })
         ) {
           // TODO: replace with envs object
           parent.replaceWith(convertToBabelAST(envs));

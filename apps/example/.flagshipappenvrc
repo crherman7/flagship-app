@@ -1,4 +1,4 @@
 {
-  hiddenEnvs: [];
-  dir: './envs';
+  "hiddenEnvs": [],
+  "dir": "./envs"
 }
