@@ -1,3 +1,3 @@
 export default {
-  api: 'https://google.com',
+  api: 'https://api.mysite.abc',
 };
