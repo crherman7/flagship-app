@@ -16,6 +16,7 @@
     "version": "0.40.0"
   },
   "peerDependencies": {
+    "@brandingbrand/react-native-app-restart": "*",
     "react": "*",
     "react-native": "*"
   },
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.25.2",
+    "@brandingbrand/react-native-app-restart": "^0.4.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/babel__core": "^7.20.5",

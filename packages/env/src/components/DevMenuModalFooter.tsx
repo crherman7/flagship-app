@@ -1,25 +1,26 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
+import AppRestart from '@brandingbrand/react-native-app-restart';
 
 import {useModal} from '../lib/context';
 
 export function DevMenuModalFooter() {
   const [_, setVisible] = useModal();
 
-  function onRestart() {
-    // TODO: use react-native restart package
+  function onPressRestart() {
+    AppRestart.restartApplication();
   }
 
-  function onClose() {
+  function onPressClose() {
     setVisible(false);
   }
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={onClose}>
+      <TouchableOpacity style={styles.button} onPress={onPressClose}>
         <Text style={styles.text}>Close</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={onPressRestart}>
         <Text style={styles.text}>Restart</Text>
       </TouchableOpacity>
     </View>

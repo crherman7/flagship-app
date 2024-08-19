@@ -42,8 +42,6 @@ export function DevMenuModal() {
     return [...screens, EnvSwitcher];
   }, [screens]);
 
-  const isScreenSet = useMemo(() => !!Screen, [Screen]);
-
   function onItemPress(Component: React.ComponentType<any> | null) {
     return () => {
       if (Component == null) {
@@ -60,7 +58,7 @@ export function DevMenuModal() {
     <Modal {...DEFAULT_MODAL_PROPS} visible={visible}>
       <SafeAreaView style={styles.safeAreaContainer}>
         <DevMenuModalHeader />
-        {isScreenSet ? (
+        {Screen ? (
           <Fragment>{Screen}</Fragment>
         ) : (
           <FlatList

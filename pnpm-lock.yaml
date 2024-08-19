@@ -28,6 +28,9 @@ importers:
       '@brandingbrand/flagship-app-router':
         specifier: workspace:*
         version: link:../../packages/router
+      '@brandingbrand/react-native-app-restart':
+        specifier: '*'
+        version: 0.4.0(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -93,6 +96,9 @@ importers:
       '@babel/core':
         specifier: 7.25.2
         version: 7.25.2
+      '@brandingbrand/react-native-app-restart':
+        specifier: ^0.4.0
+        version: 0.4.0(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0))(react@18.2.0)
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -919,6 +925,12 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@brandingbrand/react-native-app-restart@0.4.0':
+    resolution: {integrity: sha512-4KbGl6+ZGzeZu7/i+Q8gz1pm91va4HHoVJQzAB9I/gRL8MdAfWURt01fDqL5uqV36AVN/Ymhv1i4EPsG8rYVYw==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
 
   '@eslint-community/eslint-utils@4.4.0':
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -4922,6 +4934,11 @@ snapshots:
       to-fast-properties: 2.0.0
 
   '@bcoe/v8-coverage@0.2.3': {}
+
+  '@brandingbrand/react-native-app-restart@0.4.0(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      react: 18.2.0
+      react-native: 0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0)
 
   '@eslint-community/eslint-utils@4.4.0(eslint@8.57.0)':
     dependencies:

@@ -15,6 +15,7 @@
   "dependencies": {
     "@brandingbrand/flagship-app-env": "workspace:*",
     "@brandingbrand/flagship-app-router": "workspace:*",
+    "@brandingbrand/react-native-app-restart": "*",
     "react": "18.2.0",
     "react-native": "0.73.9",
     "react-native-navigation": "7.40.1"
