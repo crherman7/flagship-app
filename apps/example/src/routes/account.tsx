@@ -6,7 +6,7 @@ function Account() {
   return (
     <View style={styles.container}>
       <Text>/account</Text>
-      <Text>{JSON.stringify(env)}</Text>
+      <Text>{env.api}</Text>
     </View>
   );
 }
