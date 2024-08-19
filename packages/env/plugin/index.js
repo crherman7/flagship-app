@@ -12,36 +12,39 @@ const NODE_PROCESS_ENV_IDENTIFIER = 'env';
 const FLAGSHIP_APP_ENV_IDENTIFIER = 'FLAGSHIP_APP_ENV';
 const MODULE_NAME = 'flagshipappenvrc';
 function default_1({ types: t }) {
-    const explorerSync = (0, cosmiconfig_1.cosmiconfigSync)(MODULE_NAME);
-    const result = explorerSync.load(path_1.default.resolve(process.cwd(), '.' + MODULE_NAME));
-    if (result === null || result.isEmpty) {
-        throw new Error('unable to find .flagshipappenvrc configuration file');
+    function getEnvs() {
+        const explorerSync = (0, cosmiconfig_1.cosmiconfigSync)(MODULE_NAME);
+        const result = explorerSync.load(path_1.default.resolve(process.cwd(), '.' + MODULE_NAME));
+        if (result === null || result.isEmpty) {
+            throw new Error('unable to find .flagshipappenvrc configuration file');
+        }
+        const { dir, hiddenEnvs = [], singleEnv, } = result.config;
+        const envFiles = fs_1.default
+            .readdirSync(path_1.default.resolve(process.cwd(), dir))
+            .filter(it => /^env\.\w+\.ts/gm.test(it))
+            .filter(it => {
+            const regex = new RegExp(/^env\.(\w+)\.ts/gm);
+            const match = regex.exec(it);
+            if (!match) {
+                return false;
+            }
+            return !hiddenEnvs.includes(match[0]);
+        })
+            .map(file => {
+            return path_1.default.resolve(process.cwd(), dir, file);
+        });
+        const envs = envFiles.reduce((acc, curr) => {
+            const env = cosmiconfig_1.defaultLoadersSync['.ts'](curr, fs_1.default.readFileSync(curr, 'utf-8'));
+            const regex = new RegExp(/env\.(\w+)\.ts/gm);
+            const match = regex.exec(curr);
+            if (!match) {
+                return acc;
+            }
+            const envName = match[1];
+            return { ...acc, [envName]: env };
+        }, {});
+        return envs;
     }
-    const { dir, hiddenEnvs = [], singleEnv, } = result.config;
-    const envFiles = fs_1.default
-        .readdirSync(path_1.default.resolve(process.cwd(), dir))
-        .filter(it => /^env\.\w+\.ts/gm.test(it))
-        .filter(it => {
-        const regex = new RegExp(/^env\.(\w+)\.ts/gm);
-        const match = regex.exec(it);
-        if (!match) {
-            return false;
-        }
-        return !hiddenEnvs.includes(match[0]);
-    })
-        .map(file => {
-        return path_1.default.resolve(process.cwd(), dir, file);
-    });
-    const envs = envFiles.reduce((acc, curr) => {
-        const env = cosmiconfig_1.defaultLoadersSync['.ts'](curr, fs_1.default.readFileSync(curr, 'utf-8'));
-        const regex = new RegExp(/env\.(\w+)\.ts/gm);
-        const match = regex.exec(curr);
-        if (!match) {
-            return acc;
-        }
-        const envName = match[1];
-        return { ...acc, [envName]: env };
-    }, {});
     function convertToBabelAST(value) {
         if (Array.isArray(value)) {
             return t.arrayExpression(value.map(convertToBabelAST));
@@ -75,7 +78,7 @@ function default_1({ types: t }) {
     }
     return {
         visitor: {
-            MemberExpression({ node, parentPath: parent }) {
+            MemberExpression({ node, parentPath: parent }, state) {
                 // Check if the MemberExpression is accessing process.env
                 if (!t.isIdentifier(node.object, { name: NODE_PROCESS_IDENTIFIER }) ||
                     !t.isIdentifier(node.property, { name: NODE_PROCESS_ENV_IDENTIFIER })) {
@@ -89,7 +92,12 @@ function default_1({ types: t }) {
                 if (t.isIdentifier(parent.node.property, {
                     name: FLAGSHIP_APP_ENV_IDENTIFIER,
                 })) {
-                    // TODO: replace with envs object
+                    let envs = state.file.metadata[FLAGSHIP_APP_ENV_IDENTIFIER];
+                    console.log('🚀 ~ MemberExpression ~ envs:', envs);
+                    if (!envs) {
+                        envs = getEnvs();
+                        state.file.metadata[FLAGSHIP_APP_ENV_IDENTIFIER] = envs;
+                    }
                     parent.replaceWith(convertToBabelAST(envs));
                 }
             },

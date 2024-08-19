@@ -10,58 +10,65 @@ const FLAGSHIP_APP_ENV_IDENTIFIER = 'FLAGSHIP_APP_ENV';
 const MODULE_NAME = 'flagshipappenvrc';
 
 export default function ({types: t}: typeof Babel): Babel.PluginObj {
-  const explorerSync = cosmiconfigSync(MODULE_NAME);
-  const result = explorerSync.load(
-    path.resolve(process.cwd(), '.' + MODULE_NAME),
-  );
+  function getEnvs() {
+    const explorerSync = cosmiconfigSync(MODULE_NAME);
+    const result = explorerSync.load(
+      path.resolve(process.cwd(), '.' + MODULE_NAME),
+    );
 
-  if (result === null || result.isEmpty) {
-    throw new Error('unable to find .flagshipappenvrc configuration file');
-  }
-
-  const {
-    dir,
-    hiddenEnvs = [],
-    singleEnv,
-  } = result.config as {
-    dir: string;
-    singleEnv?: string;
-    hiddenEnvs?: string[];
-  };
-
-  const envFiles = fs
-    .readdirSync(path.resolve(process.cwd(), dir))
-    .filter(it => /^env\.\w+\.ts/gm.test(it))
-    .filter(it => {
-      const regex = new RegExp(/^env\.(\w+)\.ts/gm);
-
-      const match = regex.exec(it);
-
-      if (!match) {
-        return false;
-      }
-
-      return !hiddenEnvs.includes(match[0]);
-    })
-    .map(file => {
-      return path.resolve(process.cwd(), dir, file);
-    });
-
-  const envs = envFiles.reduce((acc, curr) => {
-    const env = defaultLoadersSync['.ts'](curr, fs.readFileSync(curr, 'utf-8'));
-
-    const regex = new RegExp(/env\.(\w+)\.ts/gm);
-
-    const match = regex.exec(curr);
-
-    if (!match) {
-      return acc;
+    if (result === null || result.isEmpty) {
+      throw new Error('unable to find .flagshipappenvrc configuration file');
     }
 
-    const envName = match[1];
+    const {
+      dir,
+      hiddenEnvs = [],
+      singleEnv,
+    } = result.config as {
+      dir: string;
+      singleEnv?: string;
+      hiddenEnvs?: string[];
+    };
 
-    return {...acc, [envName]: env};
-  }, {});
+    const envFiles = fs
+      .readdirSync(path.resolve(process.cwd(), dir))
+      .filter(it => /^env\.\w+\.ts/gm.test(it))
+      .filter(it => {
+        const regex = new RegExp(/^env\.(\w+)\.ts/gm);
+
+        const match = regex.exec(it);
+
+        if (!match) {
+          return false;
+        }
+
+        return !hiddenEnvs.includes(match[0]);
+      })
+      .map(file => {
+        return path.resolve(process.cwd(), dir, file);
+      });
+
+    const envs = envFiles.reduce((acc, curr) => {
+      const env = defaultLoadersSync['.ts'](
+        curr,
+        fs.readFileSync(curr, 'utf-8'),
+      );
+
+      const regex = new RegExp(/env\.(\w+)\.ts/gm);
+
+      const match = regex.exec(curr);
+
+      if (!match) {
+        return acc;
+      }
+
+      const envName = match[1];
+
+      return {...acc, [envName]: env};
+    }, {});
+
+    return envs;
+  }
 
   function convertToBabelAST(value: Object): any {
     if (Array.isArray(value)) {
@@ -91,7 +98,7 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
 
   return {
     visitor: {
-      MemberExpression({node, parentPath: parent}) {
+      MemberExpression({node, parentPath: parent}, state) {
         // Check if the MemberExpression is accessing process.env
         if (
           !t.isIdentifier(node.object, {name: NODE_PROCESS_IDENTIFIER}) ||
@@ -110,7 +117,13 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
             name: FLAGSHIP_APP_ENV_IDENTIFIER,
           })
         ) {
-          // TODO: replace with envs object
+          let envs = (state.file.metadata as any)[FLAGSHIP_APP_ENV_IDENTIFIER];
+
+          if (!envs) {
+            envs = getEnvs();
+            (state.file.metadata as any)[FLAGSHIP_APP_ENV_IDENTIFIER] = envs;
+          }
+
           parent.replaceWith(convertToBabelAST(envs));
         }
       },
