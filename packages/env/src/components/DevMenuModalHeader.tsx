@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {useScreen} from '../lib/context';
 
