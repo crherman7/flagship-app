@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useMemo} from 'react';
 
-import {useScreen} from '../context';
+import {useScreen} from '../lib/context';
 
 export function DevMenuModalHeader() {
   const [Screen, setScreen] = useScreen();

@@ -1,7 +1,7 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 
-import {useModal} from '../context';
+import {useModal} from '../lib/context';
 
 export function DevMenuModalFooter() {
   const [_, setVisible] = useModal();

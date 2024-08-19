@@ -23,7 +23,7 @@
  * ```
  */
 
-export * from './env';
+export * from './lib/env';
 
 /**
  * Re-exports all components from the './components' module.

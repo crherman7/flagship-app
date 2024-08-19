@@ -1,8 +1,8 @@
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-import {envName} from '../env';
-import {useModal} from '../context';
+import {envName} from '../lib/env';
+import {useModal} from '../lib/context';
 
 export namespace VersionOverlay {
   export type Props = {

@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import React, {Fragment, useMemo} from 'react';
 
-import {useModal, useScreen} from '../context';
-import {useDevMenu} from '../hooks';
+import {useModal, useScreen} from '../lib/context';
+import {useDevMenu} from '../lib/hooks';
 import {EnvSwitcher} from '../screens/EnvSwitcher';
 
 import {DevMenuModalFooter} from './DevMenuModalFooter';

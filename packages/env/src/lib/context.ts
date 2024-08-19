@@ -1,6 +1,6 @@
 import React, {createContext, createElement, useContext, useState} from 'react';
 
-import {DevMenuType} from './types';
+import {DevMenuType} from '../types';
 
 /**
  * A utility function to create a state context with an associated provider.

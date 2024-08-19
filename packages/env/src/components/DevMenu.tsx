@@ -4,9 +4,9 @@ import {
   DevMenuContext,
   ModalContextProvider,
   ScreenContextProvder,
-} from '../context';
+} from '../lib/context';
 import {DevMenuType} from '../types';
-import {showDevMenu} from '../env';
+import {showDevMenu} from '../lib/env';
 
 import {VersionOverlay} from './VersionOverlay';
 import {DevMenuModal} from './DevMenuModal';
