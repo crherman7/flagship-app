@@ -1,5 +1,5 @@
 import {register} from '@brandingbrand/flagship-app-router';
-import {env, setEnv, envs} from '@brandingbrand/flagship-app-env';
+import {DevMenu} from '@brandingbrand/flagship-app-env';
 
 import assets from './assets';
 
@@ -67,4 +67,5 @@ register({
       action: require('./routes/cart.discount.$discount').default,
     },
   ],
+  Provider: DevMenu,
 });
