@@ -35,7 +35,6 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
       .filter(it => /^env\.\w+\.ts/gm.test(it))
       .filter(it => {
         const regex = new RegExp(/^env\.(\w+)\.ts/gm);
-
         const match = regex.exec(it);
 
         if (!match) {
@@ -55,10 +54,9 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
       );
 
       const regex = new RegExp(/env\.(\w+)\.ts/gm);
-
       const match = regex.exec(curr);
 
-      if (!match) {
+      if (!match || !match[1]) {
         return acc;
       }
 

@@ -37,7 +37,7 @@ function default_1({ types: t }) {
             const env = cosmiconfig_1.defaultLoadersSync['.ts'](curr, fs_1.default.readFileSync(curr, 'utf-8'));
             const regex = new RegExp(/env\.(\w+)\.ts/gm);
             const match = regex.exec(curr);
-            if (!match) {
+            if (!match || !match[1]) {
                 return acc;
             }
             const envName = match[1];
