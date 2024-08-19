@@ -93,7 +93,6 @@ function default_1({ types: t }) {
                     name: FLAGSHIP_APP_ENV_IDENTIFIER,
                 })) {
                     let envs = state.file.metadata[FLAGSHIP_APP_ENV_IDENTIFIER];
-                    console.log('🚀 ~ MemberExpression ~ envs:', envs);
                     if (!envs) {
                         envs = getEnvs();
                         state.file.metadata[FLAGSHIP_APP_ENV_IDENTIFIER] = envs;
