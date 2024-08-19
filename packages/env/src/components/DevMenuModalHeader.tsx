@@ -6,10 +6,6 @@ import {useScreen} from '../lib/context';
 export function DevMenuModalHeader() {
   const [Screen, setScreen] = useScreen();
 
-  const isScreenSet = useMemo(() => {
-    return !!Screen;
-  }, [Screen]);
-
   function onPressBack() {
     setScreen(null);
   }
@@ -17,7 +13,7 @@ export function DevMenuModalHeader() {
   return (
     <View style={styles.container}>
       <View style={styles.left}>
-        {isScreenSet && (
+        {Screen && (
           <TouchableOpacity onPress={onPressBack}>
             <Text>back</Text>
           </TouchableOpacity>
