@@ -3,11 +3,10 @@ import {StyleSheet, Text, View} from 'react-native';
 import {env} from '@brandingbrand/flagship-app-env';
 
 function Account() {
-  console.log('🚀 ~ env:', env);
-
   return (
     <View style={styles.container}>
       <Text>/account</Text>
+      <Text>{JSON.stringify(env)}</Text>
     </View>
   );
 }
