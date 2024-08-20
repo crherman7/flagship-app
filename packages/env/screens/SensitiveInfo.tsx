@@ -15,11 +15,11 @@ import {
 
 export namespace SensitiveInfo {
   export type Props = {
-    options: RNSensitiveInfoOptions;
+    options?: RNSensitiveInfoOptions;
   };
 }
 
-export function SensitiveInfo({options}: SensitiveInfo.Props) {
+export function SensitiveInfo({options = {}}: SensitiveInfo.Props) {
   const [content, setContent] = useState<SensitiveInfoEntry[] | null>();
 
   async function fetchContent() {
