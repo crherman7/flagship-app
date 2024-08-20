@@ -1,7 +1,10 @@
+import React from 'react';
 import {register} from '@brandingbrand/flagship-app-router';
 import {DevMenu} from '@brandingbrand/flagship-app-env';
 
 import assets from './assets';
+import {AsyncStorage} from '@brandingbrand/flagship-app-env/src/screens/AsyncStorage';
+import {SensitiveInfo} from '@brandingbrand/flagship-app-env/src/screens/SensitiveInfo';
 
 register({
   routes: [
@@ -67,5 +70,7 @@ register({
       action: require('./routes/cart.discount.$discount').default,
     },
   ],
-  Provider: DevMenu,
+  Provider: ({children}) => (
+    <DevMenu screens={[AsyncStorage, SensitiveInfo]}>{children}</DevMenu>
+  ),
 });
