@@ -3,8 +3,8 @@ import {register} from '@brandingbrand/flagship-app-router';
 import {DevMenu} from '@brandingbrand/flagship-app-env';
 
 import assets from './assets';
-import {AsyncStorage} from '@brandingbrand/flagship-app-env/src/screens/AsyncStorage';
-import {SensitiveInfo} from '@brandingbrand/flagship-app-env/src/screens/SensitiveInfo';
+import {AsyncStorage} from '@brandingbrand/flagship-app-env/screens/AsyncStorage';
+import {SensitiveInfo} from '@brandingbrand/flagship-app-env/screens/SensitiveInfo';
 
 register({
   routes: [

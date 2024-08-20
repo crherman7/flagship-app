@@ -951,6 +951,8 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+  - react-native-sensitive-info (5.5.8):
+    - React
   - React-nativeconfig (0.73.9)
   - React-NativeModulesApple (0.73.9):
     - glog
@@ -1191,6 +1193,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - "react-native-app-restart (from `../node_modules/@brandingbrand/react-native-app-restart`)"
   - "react-native-flagship-env (from `../node_modules/@brandingbrand/flagship-app-env`)"
+  - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1292,6 +1295,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@brandingbrand/react-native-app-restart"
   react-native-flagship-env:
     :path: "../node_modules/@brandingbrand/flagship-app-env"
+  react-native-sensitive-info:
+    :path: "../node_modules/react-native-sensitive-info"
   React-nativeconfig:
     :path: "../node_modules/react-native/ReactCommon"
   React-NativeModulesApple:
@@ -1382,6 +1387,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 6c229dc8f1640457d1f665f0b7d79ab8f604dc8b
   react-native-app-restart: 78c950135a8825e5146752094aae700a73511954
   react-native-flagship-env: 8246ff9fbcf8cefb5b71c44f48c4b2a6a1a93801
+  react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
   React-nativeconfig: c1729ab95240ec80d47a2bb8354d8f31138e35a7
   React-NativeModulesApple: 115c934a87f3b45fecb0fada08fa70bab3dff65c
   React-perflogger: c93b6a895eca3f9196656bb20ce0e15ad597a4e9

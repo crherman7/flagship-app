@@ -10,7 +10,8 @@ import React from 'react';
 
 import {useDevMenu} from '../lib/hooks';
 import {useScreen} from '../lib/context';
-import {EnvSwitcher} from '../screens/EnvSwitcher';
+
+import {EnvSwitcher} from './EnvSwitcher';
 
 export function DevMenuList() {
   const {screens = []} = useDevMenu();

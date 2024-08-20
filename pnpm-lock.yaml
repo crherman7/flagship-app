@@ -43,6 +43,9 @@ importers:
       react-native-navigation:
         specifier: 7.40.1
         version: 7.40.1(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0))(react@18.2.0)
+      react-native-sensitive-info:
+        specifier: ^5.5.8
+        version: 5.5.8
     devDependencies:
       '@babel/core':
         specifier: ^7.20.0
@@ -126,6 +129,9 @@ importers:
       react-native:
         specifier: ^0.73.0
         version: 0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0)
+      react-native-sensitive-info:
+        specifier: ^5.5.8
+        version: 5.5.8
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -3351,6 +3357,9 @@ packages:
     peerDependenciesMeta:
       remx:
         optional: true
+
+  react-native-sensitive-info@5.5.8:
+    resolution: {integrity: sha512-p99oaEW4QG1RdUNrkvd/c6Qdm856dQw/Rk81f9fA6Y3DlPs6ADNdU+jbPuTz3CcOUJwuKBDNenX6LR9KfmGFEg==}
 
   react-native-url-polyfill@2.0.0:
     resolution: {integrity: sha512-My330Do7/DvKnEvwQc0WdcBnFPploYKp9CYlefDXzIdEaA+PAhDYllkvGeEroEzvc4Kzzj2O4yVdz8v6fjRvhA==}
@@ -8211,6 +8220,8 @@ snapshots:
       react-lifecycles-compat: 2.0.0
       react-native: 0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0)
       tslib: 1.9.3
+
+  react-native-sensitive-info@5.5.8: {}
 
   react-native-url-polyfill@2.0.0(react-native@0.73.9(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0)):
     dependencies:
