@@ -217,4 +217,4 @@ export function EnvSwitcher() {
   );
 }
 
-EnvSwitcher.name = 'EnvSwitcher';
+EnvSwitcher.displayName = 'EnvSwitcher';

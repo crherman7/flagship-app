@@ -17,4 +17,4 @@ const styles = StyleSheet.create({
   },
 });
 
-SensitiveInfo.name = 'SensitiveInfo';
+SensitiveInfo.displayName = 'SensitiveInfo';

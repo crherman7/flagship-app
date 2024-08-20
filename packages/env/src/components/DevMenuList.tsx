@@ -34,7 +34,7 @@ export function DevMenuList() {
         style={styles.rowContainer}
         key={item.name}
         onPress={onItemPress(item)}>
-        <Text>{item.name}</Text>
+        <Text>{item.displayName}</Text>
         <Text>{`>`}</Text>
       </TouchableOpacity>
     );

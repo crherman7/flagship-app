@@ -17,4 +17,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AsyncStorage.name = 'AsyncStorage';
+AsyncStorage.displayName = 'AsyncStorage';
