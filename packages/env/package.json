@@ -26,6 +26,7 @@
   "devDependencies": {
     "@babel/core": "7.25.2",
     "@brandingbrand/react-native-app-restart": "^0.4.0",
+    "@react-native-async-storage/async-storage": "^1.24.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/babel__core": "^7.20.5",
