@@ -37,11 +37,23 @@ export default function ({types: t}: typeof Babel): Babel.PluginObj {
         const regex = new RegExp(/^env\.(\w+)\.ts/gm);
         const match = regex.exec(it);
 
-        if (!match) {
+        if (!match || !match[1]) {
           return false;
         }
 
-        return !hiddenEnvs.includes(match[0]);
+        return !hiddenEnvs.includes(match[1]);
+      })
+      .filter(it => {
+        if (!singleEnv) return true;
+
+        const regex = new RegExp(/^env\.(\w+)\.ts/gm);
+        const match = regex.exec(it);
+
+        if (!match || !match[1]) {
+          return false;
+        }
+
+        return singleEnv === match[1];
       })
       .map(file => {
         return path.resolve(process.cwd(), dir, file);
