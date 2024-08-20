@@ -39,7 +39,7 @@ import {DevMenuType} from '../types';
  * );
  * ```
  */
-const createStateContext = <T>(defaultInitialValue: T) => {
+export const createStateContext = <T>(defaultInitialValue: T) => {
   // Create a context with a tuple type: [state, setState] or undefined
   const context = createContext<
     [T, React.Dispatch<React.SetStateAction<T>>] | undefined

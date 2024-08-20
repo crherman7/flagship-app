@@ -1,3 +1,3 @@
 export default {
-  api: 'https://api.mysite.abc',
+  api: 'https://prod.api.mysite.abc',
 } satisfies Env;
