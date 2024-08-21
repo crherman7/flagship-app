@@ -2,9 +2,23 @@ import React from 'react';
 import {register} from '@brandingbrand/flagship-app-router';
 import {DevMenu} from '@brandingbrand/flagship-app-env';
 
-import assets from './assets';
+/**
+ * Importing screens from subpackages to avoid unnecessary dependencies.
+ *
+ * The `AsyncStorage` and `SensitiveInfo` screens are imported from their respective subpackages
+ * within `@brandingbrand/flagship-app-env`. This approach allows you to include these screens
+ * in your project without requiring you to install the underlying `react-native-*` packages unless
+ * you actually use these screens. By importing them this way, you can keep your project lean
+ * and avoid unnecessary dependencies.
+ *
+ * @example
+ * import { AsyncStorage } from '@brandingbrand/flagship-app-env/screens/AsyncStorage';
+ * import { SensitiveInfo } from '@brandingbrand/flagship-app-env/screens/SensitiveInfo';
+ */
 import {AsyncStorage} from '@brandingbrand/flagship-app-env/screens/AsyncStorage';
 import {SensitiveInfo} from '@brandingbrand/flagship-app-env/screens/SensitiveInfo';
+
+import assets from './assets';
 
 register({
   routes: [

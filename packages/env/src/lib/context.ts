@@ -149,5 +149,38 @@ if (__DEV__) {
  */
 export const [useModal, ModalContextProvider] = createStateContext(false);
 
-export const [useScreen, ScreenContextProvder] =
+/**
+ * A custom hook and provider for managing the active screen component.
+ *
+ * This exports two values:
+ * - `useScreen`: A hook to access the current screen component and its setter function.
+ * - `ScreenContextProvider`: A provider component that supplies the current screen component to its descendants.
+ *
+ * The initial state is `null`, indicating that no screen is active by default.
+ * This setup allows dynamic rendering and updating of the active screen component across the application.
+ *
+ * @example
+ * ```tsx
+ * import { useScreen, ScreenContextProvider } from './screenContext';
+ *
+ * const ScreenSwitcher = () => {
+ *   const [currentScreen, setScreen] = useScreen();
+ *
+ *   return (
+ *     <div>
+ *       <button onClick={() => setScreen(<HomeScreen />)}>Home</button>
+ *       <button onClick={() => setScreen(<ProfileScreen />)}>Profile</button>
+ *       {currentScreen}
+ *     </div>
+ *   );
+ * };
+ *
+ * const App = () => (
+ *   <ScreenContextProvider>
+ *     <ScreenSwitcher />
+ *   </ScreenContextProvider>
+ * );
+ * ```
+ */
+export const [useScreen, ScreenContextProvider] =
   createStateContext<JSX.Element | null>(null);

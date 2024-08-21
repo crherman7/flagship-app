@@ -3,7 +3,7 @@ import React, {Fragment, PropsWithChildren} from 'react';
 import {
   DevMenuContext,
   ModalContextProvider,
-  ScreenContextProvder,
+  ScreenContextProvider,
 } from '../lib/context';
 import {DevMenuType} from '../types';
 import {showDevMenu} from '../lib/env';
@@ -24,10 +24,10 @@ export function DevMenu({children, location, ...props}: DevMenu.Props) {
     <DevMenuContext.Provider value={props}>
       {children}
       <ModalContextProvider>
-        <ScreenContextProvder>
+        <ScreenContextProvider>
           <VersionOverlay location={location} />
           <DevMenuModal />
-        </ScreenContextProvder>
+        </ScreenContextProvider>
       </ModalContextProvider>
     </DevMenuContext.Provider>
   );

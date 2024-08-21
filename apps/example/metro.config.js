@@ -14,7 +14,22 @@ const projectRoot = __dirname;
 const config = getDefaultConfig(projectRoot);
 
 config.watchFolders = [workspaceRoot];
+
+/**
+ * Resetting Metro cache to ensure Babel transforms reflect the updated environment.
+ *
+ * When switching environments (e.g., development, staging, production), Babel may apply
+ * different transformations based on the environment-specific configuration. However,
+ * Metro's caching mechanism might retain outdated transforms from the previous environment,
+ * leading to unexpected behavior or incorrect code being executed. To avoid this, we reset
+ * the Metro cache whenever the environment changes, ensuring that the latest Babel transforms
+ * are applied correctly.
+ *
+ * @example
+ * config.resetCache = true;
+ */
 config.resetCache = true;
+
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(workspaceRoot, 'node_modules'),
