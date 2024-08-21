@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">example</string>
+    <string name="flagship_env">prod</string>
+    <string name="flagship_dev_menu">true</string>
 </resources>

@@ -2,7 +2,9 @@ package com.flagshipenv
 
 import android.annotation.SuppressLint
 import android.content.Context
+
 import android.content.SharedPreferences
+import android.content.pm.PackageInfo
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -12,6 +14,8 @@ import com.facebook.react.bridge.Promise
 class FlagshipEnvModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
+  private val sharedPref: SharedPreferences = reactContext.getSharedPreferences("__ENV_NAME_STORE", Context.MODE_PRIVATE)
+
   override fun getName(): String {
     return NAME
   }
@@ -20,8 +24,16 @@ class FlagshipEnvModule(reactContext: ReactApplicationContext) :
     val constants = HashMap<String, Any>()
     val context = reactApplicationContext
 
-    constants["envName"] = context.getString(R.string.flagship_env)
-    constants["showDevMenu"] = context.getString(R.string.flagship_dev_menu)
+    context.getString(R.string.flagship_env)
+
+    // TODO: get envName from strings.xml
+    val initialEnvName = "prod";
+    val envName = sharedPref.getString("envName", initialEnvName) ?: initialEnvName
+
+    constants["envName"] = envName
+
+    // TODO: get showDevMenu from strings.xml
+    constants["showDevMenu"] = true
     constants["appVersion"] = getPackageInfo().versionName
     constants["buildNumber"] = getPackageInfo().versionCode.toString()
 
@@ -34,6 +46,7 @@ class FlagshipEnvModule(reactContext: ReactApplicationContext) :
       val editor = sharedPref.edit()
       editor.putString("envName", name)
       editor.commit()
+
       promise.resolve(null)
   }
 
