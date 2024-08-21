@@ -20,9 +20,10 @@ class FlagshipEnvModule(reactContext: ReactApplicationContext) :
     val constants = HashMap<String, Any>()
     val context = reactApplicationContext
 
-    constants["appName"] = context.getString(R.string.app_name)
     constants["envName"] = context.getString(R.string.flagship_env)
     constants["showDevMenu"] = context.getString(R.string.flagship_dev_menu)
+    constants["appVersion"] = getPackageInfo().versionName
+    constants["buildNumber"] = getPackageInfo().versionCode.toString()
 
     return constants
   }
@@ -35,6 +36,14 @@ class FlagshipEnvModule(reactContext: ReactApplicationContext) :
       editor.commit()
       promise.resolve(null)
   }
+
+  @Throws(Exception::class)
+  private fun getPackageInfo(): PackageInfo {
+      val packageManager = reactApplicationContext.packageManager
+      val packageName = reactApplicationContext.packageName
+      return packageManager.getPackageInfo(packageName, 0)
+  }
+
 
   companion object {
     const val NAME = "FlagshipEnv"

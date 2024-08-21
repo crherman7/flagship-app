@@ -19,7 +19,7 @@ class FlagshipEnv: NSObject {
 
     let envName = UserDefaults.standard.string(forKey: "envName") ?? initialEnvName
 
-    return ["envName": envName, "showDevMenu": showDevMenu]
+    return ["envName": envName, "showDevMenu": showDevMenu, "appVersion": getAppVersion(), "buildNumber": getBuildNumber()]
   }
 
   @objc
@@ -27,5 +27,13 @@ class FlagshipEnv: NSObject {
     UserDefaults.standard.set(name, forKey: "envName")
     UserDefaults.standard.synchronize()
     resolve(nil)
+  }
+
+  func getAppVersion() -> String? {
+    return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+  }
+
+  func getBuildNumber() -> String? {
+    return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
   }
 }

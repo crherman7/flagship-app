@@ -1,7 +1,7 @@
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-import {envName} from '../lib/env';
+import {appVersion, buildNumber, envName} from '../lib/env';
 import {useModal} from '../lib/context';
 
 export namespace VersionOverlay {
@@ -27,7 +27,7 @@ export function VersionOverlay({
       {/**
        * TODO: add version from `react-native-device-info`
        */}
-      <Text style={s.text}>{`v1.0.0`}</Text>
+      <Text style={s.text}>{`v${appVersion} (${buildNumber})`}</Text>
     </TouchableOpacity>
   );
 }

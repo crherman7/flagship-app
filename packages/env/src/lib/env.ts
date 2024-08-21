@@ -38,6 +38,24 @@ export const envName = FlagshipEnv.envName;
 export const showDevMenu = FlagshipEnv.showDevMenu;
 
 /**
+ * The current application version.
+ * @example
+ * ```typescript
+ * console.log(appVersion); // '1.0.0'
+ * ```
+ */
+export const appVersion = FlagshipEnv.appVersion;
+
+/**
+ * The build number of the application.
+ * @example
+ * ```typescript
+ * console.log(buildNumber); // '42'
+ * ```
+ */
+export const buildNumber = FlagshipEnv.buildNumber;
+
+/**
  * Sets the environment name for the app.
  * @param envName - The name of the environment to set.
  * @returns A promise that resolves when the environment has been set.
