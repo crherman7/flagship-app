@@ -16,7 +16,7 @@ function default_1({ types: t }) {
         const explorerSync = (0, cosmiconfig_1.cosmiconfigSync)(MODULE_NAME);
         const result = explorerSync.load(path_1.default.resolve(process.cwd(), '.' + MODULE_NAME));
         if (result === null || result.isEmpty) {
-            throw new Error('unable to find .flagshipappenvrc configuration file');
+            throw new Error('Unable to find .flagshipappenvrc configuration file');
         }
         const { dir, hiddenEnvs = [], singleEnv, } = result.config;
         const envFiles = fs_1.default
@@ -75,7 +75,6 @@ function default_1({ types: t }) {
             return t.stringLiteral(value);
         }
         else if (typeof value === 'object') {
-            // Handle objects
             const properties = Object.keys(value).map(key => {
                 const propValue = convertToBabelAST(value[key]);
                 return t.objectProperty(t.stringLiteral(key), propValue);
@@ -89,16 +88,13 @@ function default_1({ types: t }) {
     return {
         visitor: {
             MemberExpression({ node, parentPath: parent }, state) {
-                // Check if the MemberExpression is accessing process.env
                 if (!t.isIdentifier(node.object, { name: NODE_PROCESS_IDENTIFIER }) ||
                     !t.isIdentifier(node.property, { name: NODE_PROCESS_ENV_IDENTIFIER })) {
                     return;
                 }
-                // Ensure that the MemberExpression has a parent MemberExpression
                 if (!t.isMemberExpression(parent.node)) {
                     return;
                 }
-                // Replace process.env.__RECHUNK_USERNAME__ with the rechunk project
                 if (t.isIdentifier(parent.node.property, {
                     name: FLAGSHIP_APP_ENV_IDENTIFIER,
                 })) {

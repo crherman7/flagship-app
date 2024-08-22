@@ -13,7 +13,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "target": "ES2022",
-    "rootDir": "./plugin"
+    "rootDir": "./plugin",
+    "removeComments": true
   },
   "include": ["./plugin"]
 }
