@@ -1,7 +1,7 @@
 import {Alert} from 'react-native';
 
-function applyDiscount(path: string) {
-  Alert.alert('Apply Discount', path);
+function applyDiscount(...args: any) {
+  Alert.alert('Apply Discount', JSON.stringify(args));
 }
 
 export default applyDiscount;

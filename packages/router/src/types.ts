@@ -19,7 +19,11 @@ export type Route = {
   /**
    * Optional action to be executed when the route is activated
    */
-  action?: (...args: any) => Promise<void>;
+  action?: (
+    url: string,
+    pathParms: object,
+    queryParams: object,
+  ) => Promise<void>;
 
   /**
    * The React component associated with the route
@@ -78,7 +82,9 @@ export type Match = {
   /**
    * Array of routes to be registered with the router
    */
-  routes: Route[];
+  routes: (Omit<Route, 'Component' | 'ErrorBoundary'> & {
+    hasComponent: boolean;
+  })[];
 };
 
 /**

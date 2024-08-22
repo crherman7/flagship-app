@@ -6,7 +6,7 @@ function Cart() {
   const navigator = useNavigator();
 
   function onPress() {
-    navigator.open('/cart/discount/abc12345');
+    navigator.open('/cart/discount/abc12345?foo=bar');
   }
 
   return (

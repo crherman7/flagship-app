@@ -146,6 +146,7 @@ export function useQueryParams() {
   if (!route.url) return {};
 
   // Regular expression to find query parameters in the URL
+  // TOOD: abstract this into a shared function
   const regex = /[?&]([^=#]+)=([^&#]*)/g;
 
   // Object to store search parameters
@@ -192,6 +193,43 @@ export function useRouteData<T>(): T {
 export function useNavigator() {
   const componentId = useComponentId();
   const route = useRoute();
+
+  /**
+   * Converts a URL path or full URL string to a `URL` object.
+   *
+   * If the input string does not contain a protocol, it prepends the default `bundleId`
+   * and converts it into a complete URL. If a protocol exists, it directly converts the
+   * input into a `URL` object.
+   *
+   * @param pathOrUrl - The URL path or full URL string to be converted.
+   * @returns A `URL` object representing the complete URL.
+   *
+   * @example
+   * ```typescript
+   * const url1 = createAppURL('/path/to/resource');
+   * console.log(url1.toString()); // Outputs: app://path/to/resource
+   *
+   * const url2 = createAppURL('https://example.com/resource');
+   * console.log(url2.toString()); // Outputs: https://example.com/resource
+   * ```
+   */
+  function createAppURL(pathOrUrl: string): URL {
+    // Check if the input string contains a protocol using a regular expression.
+    const hasProtocol = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(pathOrUrl);
+
+    // Default bundle ID (or protocol) to prepend if no protocol is present.
+    // TODO: use react-native-device-info to get bundleId or packageName
+    const bundleId = 'app://';
+
+    // Construct the full URL. If the input has a protocol, use it as is.
+    // Otherwise, prepend the bundleId and format the URL.
+    const fullUrl = hasProtocol
+      ? pathOrUrl
+      : `${bundleId}${pathOrUrl.startsWith('/') ? '' : '/'}${pathOrUrl}`;
+
+    // Convert the resulting string into a URL object and return it.
+    return new URL(fullUrl);
+  }
 
   /**
    * Determines if a given route is associated with a bottom tab.
@@ -259,21 +297,47 @@ export function useNavigator() {
    * open('/home');
    */
   async function open(path: string, passProps = {}, options?: Options) {
+    const url = createAppURL(path);
+
     const matchedRoute = route.routes.find(it => {
-      return match(it.path)(path);
+      return match(it.path)(url.pathname);
     });
 
     if (!matchedRoute) return;
 
     // Perform any associated action with the matched route
     try {
-      await matchedRoute.action?.(path);
+      // Regular expression to find query parameters in the URL
+      // TOOO: abstract this to shared function
+      const regex = /[?&]([^=#]+)=([^&#]*)/g;
+
+      // Object to store search parameters
+      const params: Record<string, string> = {};
+
+      // Variable to store each match found by regex
+      let found: RegExpExecArray | null;
+
+      // Loop through all matches found in the URL
+      while ((found = regex.exec(url.href)) !== null) {
+        // Extract parameter name and value from the match
+        const paramName = found[1];
+        const paramValue = found[2];
+
+        // If both name and value are found, add them to the params object
+        if (paramName && paramValue) {
+          params[paramName] = paramValue;
+        }
+      }
+
+      const res = match(matchedRoute.path)(url.pathname);
+
+      await matchedRoute.action?.(url.href, res ? res.params : {}, params);
     } catch (e) {
       // handle error (e.g., log it)
     }
 
     // If there's no associated component, return
-    if (!matchedRoute?.Component) return;
+    if (!matchedRoute.hasComponent) return;
 
     // If the route is a bottom tab, pop to root
     if (isBottomTab(matchedRoute)) {
@@ -376,7 +440,7 @@ export function useNavigator() {
     options: Options = {},
   ): Promise<U> {
     // Generate a unique name for the modal component.
-    const name = `modal_${idCounter}`;
+    const name = `Modal_${idCounter}`;
     idCounter++;
 
     // Register the modal component with React Native Navigation.

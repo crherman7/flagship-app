@@ -46,29 +46,6 @@ function createInitialLayout(): LayoutRoot {
 }
 
 /**
- * Creates a map of route paths to route names.
- *
- * @param {Route[]} routes - Array of route definitions.
- * @returns {Record<string, string>} A map of route paths to route names.
- *
- * @example
- * const routeMap = createRouteMap([
- *   { path: '/home', name: 'HomeScreen', Component: HomeComponent },
- *   { path: '/profile', name: 'ProfileScreen', Component: ProfileComponent }
- * ]);
- * console.log(routeMap); // { '/home': 'HomeScreen', '/profile': 'ProfileScreen' }
- */
-function createRouteMap(routes: Route[]): Record<string, string> {
-  return routes.reduce(
-    (acc, curr) => {
-      acc[curr.path] = curr.name;
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
-}
-
-/**
  * Registers a single route with the navigation system.
  *
  * @param {Route} route - The route definition.
@@ -154,6 +131,24 @@ function renderComponent(
     return `app://${__flagship_app_router_url}`;
   }, [__flagship_app_router_url]);
 
+  /**
+   * Sanitizes the routes by removing `Component` and `ErrorBoundary` from the context.
+   * This is done to make the context lighter, as we only need to know whether a component
+   * exists, not store the entire component itself.
+   *
+   * @param routes - The array of route objects to sanitize.
+   * @returns A new array of route objects with `Component` and `ErrorBoundary` removed,
+   *          and an additional `hasComponent` property indicating if a component was present.
+   */
+  const sanitizedRoutes = routes.map(route => {
+    const {Component, ErrorBoundary, ...passRoute} = route;
+
+    return {
+      ...passRoute,
+      hasComponent: !!Component,
+    };
+  });
+
   // Render the component wrapped with ErrorBoundary, Provider, RouterContext, and ComponentIdContext
   return (
     <ErrorBoundary>
@@ -164,7 +159,7 @@ function renderComponent(
             name: route.name,
             url,
             data,
-            routes,
+            routes: sanitizedRoutes,
           }}>
           <ComponentIdContext.Provider value={componentId}>
             <Component />
