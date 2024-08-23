@@ -1,6 +1,6 @@
 import {useLinking, useNavigator} from '@brandingbrand/flagship-app-router';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import HelloWorldModal from '../components/HelloWorldModal';
 
 function Home() {
@@ -9,7 +9,9 @@ function Home() {
 
   async function onPress() {
     try {
-      await showModal(HelloWorldModal, {});
+      const res = await showModal<{}, string>(HelloWorldModal, {});
+
+      Alert.alert('Result', res);
     } catch (e) {}
   }
 
