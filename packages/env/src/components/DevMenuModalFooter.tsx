@@ -3,11 +3,14 @@ import React from 'react';
 import AppRestart from '@brandingbrand/react-native-app-restart';
 
 import {useModal} from '../lib/context';
+import {useDevMenu} from '../lib/hooks';
 
 export function DevMenuModalFooter() {
+  const {onRestart} = useDevMenu();
   const [_, setVisible] = useModal();
 
-  function onPressRestart() {
+  async function onPressRestart() {
+    await onRestart?.();
     AppRestart.restartApplication();
   }
 

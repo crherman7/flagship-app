@@ -10,6 +10,7 @@ import React, {Fragment, PropsWithChildren, useMemo} from 'react';
 
 import {envName, envs, setEnv as setNativeEnv} from '../lib/env';
 import {createStateContext} from '../lib/context';
+import {useDevMenu} from '../lib/hooks';
 
 export namespace EnvSwitcher {
   export type RootProps = PropsWithChildren;
@@ -147,24 +148,27 @@ function Content() {
 const contentStyles = StyleSheet.create({
   contianer: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
   },
   text: {
     paddingLeft: 12,
-    paddingTop: 12,
+    paddingVertical: 12,
     fontWeight: 'bold',
   },
   contentText: {
     fontSize: 10,
+    paddingBottom: 24,
   },
 });
 
 Content.displayName = 'ContentEnvSwitcher';
 
 function Trigger() {
+  const {onEnvChange} = useDevMenu();
   const [env] = useEnvSwitcher();
 
-  function onPress() {
+  async function onPress() {
+    await onEnvChange?.(env);
     setNativeEnv(env);
     AppRestart.restartApplication();
   }
