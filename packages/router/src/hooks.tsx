@@ -6,7 +6,7 @@ import {URL} from 'react-native-url-polyfill';
 import parseUrl from 'parse-url';
 
 import {ComponentIdContext, ModalContext, RouterContext} from './context';
-import {Route} from './types';
+import {Guard, Route} from './types';
 
 /**
  * Counter used for generating unique IDs.
@@ -175,6 +175,66 @@ export function useNavigator() {
   const route = useRoute();
 
   /**
+   * Executes a series of guards to determine if navigation should be redirected or canceled.
+   *
+   * @param toPath - The destination path for navigation.
+   * @param fromPath - The current path from which navigation is happening. If not provided, it defaults to `undefined`.
+   * @param guards - An optional array of guard functions to be executed. Each guard is invoked with the destination path, current path, and control functions.
+   *
+   * @returns A promise that resolves to the redirect path if a guard calls `redirect`, or `undefined` if no redirection is needed.
+   */
+  async function runGuards(
+    toPath: string,
+    fromPath?: string | null,
+    guards?: Guard[],
+  ): Promise<string | undefined> {
+    // If no guards are provided, exit early
+    if (!guards) return;
+
+    let redirectPath: string | undefined;
+
+    /**
+     * Cancels the navigation process by throwing an error.
+     * This will halt the execution of the guards and propagate the error.
+     */
+    function cancel() {
+      throw new Error('Navigation canceled');
+    }
+
+    /**
+     * Sets the redirect path if navigation needs to be redirected.
+     *
+     * @param path - The path to redirect to.
+     */
+    function redirect(path: string) {
+      redirectPath = path;
+    }
+
+    // Execute each guard in the order they are provided
+    for (const guard of guards) {
+      // If a redirect has been set, exit early and return the redirect path
+      if (redirectPath !== undefined) {
+        return redirectPath;
+      }
+
+      try {
+        // Call the guard function with the parsed paths and control functions
+        await guard(
+          parseUrl(toPath),
+          fromPath ? parseUrl(fromPath) : undefined,
+          {cancel, redirect},
+        );
+      } catch (e) {
+        // TODO: Implement error handling logic if needed
+        console.error(e); // Optional: Log error for debugging purposes
+      }
+    }
+
+    // Return the redirect path if set, otherwise return `undefined`
+    return redirectPath;
+  }
+
+  /**
    * Converts a URL path or full URL string to a `URL` object.
    *
    * If the input string does not contain a protocol, it prepends the default `bundleId`
@@ -286,52 +346,12 @@ export function useNavigator() {
     if (!matchedRoute) return;
 
     const {guards} = matchedRoute;
+    const redirect = await runGuards(url.href, route.url?.href, guards);
 
-    if (guards) {
-      try {
-        // eslint-disable-next-line no-async-promise-executor
-        const result = await new Promise<string | void>(async (res, rej) => {
-          let hasRedirected = false;
+    if (redirect) {
+      await open(redirect);
 
-          function redirect(path: string) {
-            if (!hasRedirected) {
-              hasRedirected = true;
-              res(path); // Resolve the promise with the new path
-            }
-          }
-
-          function cancel() {
-            if (!hasRedirected) {
-              hasRedirected = true;
-              rej(new Error('Navigation canceled')); // Reject the promise to stop further execution
-            }
-          }
-
-          for (const guard of guards) {
-            if (hasRedirected) return; // Exit the loop if already resolved or rejected
-
-            // TODO: get fromUrl.href
-            await guard(parseUrl(url.href), parseUrl(url.href), {
-              redirect,
-              cancel,
-            });
-          }
-
-          // Resolve if all guards pass without triggering redirect or cancel
-          if (!hasRedirected) {
-            res();
-          }
-        });
-
-        if (typeof result === 'string' && !!result) {
-          await open(result);
-
-          return;
-        }
-      } catch (e) {
-        // TODO: do something wtih error
-        return;
-      }
+      return;
     }
 
     const res = match(matchedRoute.path)(url.pathname);

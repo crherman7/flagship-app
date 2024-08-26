@@ -215,6 +215,6 @@ type Next = {
  */
 export type Guard = (
   to: ParsedPath,
-  from: ParsedPath,
+  from: ParsedPath | undefined,
   next: Next,
 ) => Promise<void>;
