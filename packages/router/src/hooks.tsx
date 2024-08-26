@@ -352,13 +352,16 @@ export function useNavigator() {
       if (redirect) {
         await open(redirect);
 
+        // Break out of function since we are redirecting
         return;
       }
 
       if (redirect === false) {
+        // Break out of function since cancel was executed
         return;
       }
     } catch (e) {
+      // Break out of function due to side-effect throwing error from a guard
       return;
     }
 
