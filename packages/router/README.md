@@ -1,4 +1,4 @@
-# React Native Navigation Router
+# @brandingbrand/flagship-app-router
 
 This project provides a flexible and extensible routing system for React Native applications using `react-native-navigation`. It includes utilities for registering routes, setting up the application's layout, and managing navigation within the app.
 
