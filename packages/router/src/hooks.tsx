@@ -187,18 +187,18 @@ export function useNavigator() {
     toPath: string,
     fromPath?: string | null,
     guards?: Guard[],
-  ): Promise<string | undefined> {
+  ): Promise<string | false | undefined> {
     // If no guards are provided, exit early
     if (!guards) return;
 
-    let redirectPath: string | undefined;
+    let redirectPath: string | false | undefined;
 
     /**
      * Cancels the navigation process by throwing an error.
      * This will halt the execution of the guards and propagate the error.
      */
     function cancel() {
-      throw new Error('Navigation canceled');
+      redirectPath = false;
     }
 
     /**
@@ -345,12 +345,20 @@ export function useNavigator() {
 
     if (!matchedRoute) return;
 
-    const {guards} = matchedRoute;
-    const redirect = await runGuards(url.href, route.url?.href, guards);
+    try {
+      const {guards} = matchedRoute;
+      const redirect = await runGuards(url.href, route.url?.href, guards);
 
-    if (redirect) {
-      await open(redirect);
+      if (redirect) {
+        await open(redirect);
 
+        return;
+      }
+
+      if (redirect === false) {
+        return;
+      }
+    } catch (e) {
       return;
     }
 
