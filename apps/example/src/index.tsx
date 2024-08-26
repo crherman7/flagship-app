@@ -82,6 +82,20 @@ register({
       name: 'applyDiscount',
       path: '/cart/discount/:discount',
       action: require('./routes/cart.discount.$discount').default,
+      guards: [
+        async function (to, from, next) {
+          console.log('to1:', to);
+          console.log('from1:', from);
+          console.log('next:', next);
+
+          next.redirect('/shop');
+        },
+        async function (to, from, next) {
+          console.log('to2:', to);
+          console.log('from2:', from);
+          console.log('next:', next);
+        },
+      ],
     },
   ],
   Provider: ({children}) => (

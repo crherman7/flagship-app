@@ -3,6 +3,7 @@ import {useContext, useEffect} from 'react';
 import {Layout, Navigation, Options} from 'react-native-navigation';
 import {Linking} from 'react-native';
 import {URL} from 'react-native-url-polyfill';
+import parseUrl from 'parse-url';
 
 import {ComponentIdContext, ModalContext, RouterContext} from './context';
 import {Route} from './types';
@@ -145,30 +146,9 @@ export function useQueryParams() {
 
   if (!route.url) return {};
 
-  // Regular expression to find query parameters in the URL
-  // TOOD: abstract this into a shared function
-  const regex = /[?&]([^=#]+)=([^&#]*)/g;
+  const {query} = parseUrl(route.url.href);
 
-  // Object to store search parameters
-  const params: Record<string, string> = {};
-
-  // Variable to store each match found by regex
-  let match: RegExpExecArray | null;
-
-  // Loop through all matches found in the URL
-  while ((match = regex.exec(route.url.href)) !== null) {
-    // Extract parameter name and value from the match
-    const paramName = match[1];
-    const paramValue = match[2];
-
-    // If both name and value are found, add them to the params object
-    if (paramName && paramValue) {
-      params[paramName] = paramValue;
-    }
-  }
-
-  // Return the object containing search parameters
-  return params;
+  return query;
 }
 
 /**
@@ -305,33 +285,61 @@ export function useNavigator() {
 
     if (!matchedRoute) return;
 
+    const {guards} = matchedRoute;
+
+    if (guards) {
+      try {
+        // eslint-disable-next-line no-async-promise-executor
+        const result = await new Promise<string | void>(async (res, rej) => {
+          let hasRedirected = false;
+
+          function redirect(path: string) {
+            if (!hasRedirected) {
+              hasRedirected = true;
+              res(path); // Resolve the promise with the new path
+            }
+          }
+
+          function cancel() {
+            if (!hasRedirected) {
+              hasRedirected = true;
+              rej(new Error('Navigation canceled')); // Reject the promise to stop further execution
+            }
+          }
+
+          for (const guard of guards) {
+            if (hasRedirected) return; // Exit the loop if already resolved or rejected
+
+            // TODO: get fromUrl.href
+            await guard(parseUrl(url.href), parseUrl(url.href), {
+              redirect,
+              cancel,
+            });
+          }
+
+          // Resolve if all guards pass without triggering redirect or cancel
+          if (!hasRedirected) {
+            res();
+          }
+        });
+
+        if (typeof result === 'string' && !!result) {
+          await open(result);
+
+          return;
+        }
+      } catch (e) {
+        // TODO: do something wtih error
+        return;
+      }
+    }
+
+    const res = match(matchedRoute.path)(url.pathname);
+    const {query} = parseUrl(url.href);
+
     // Perform any associated action with the matched route
     try {
-      // Regular expression to find query parameters in the URL
-      // TOOO: abstract this to shared function
-      const regex = /[?&]([^=#]+)=([^&#]*)/g;
-
-      // Object to store search parameters
-      const params: Record<string, string> = {};
-
-      // Variable to store each match found by regex
-      let found: RegExpExecArray | null;
-
-      // Loop through all matches found in the URL
-      while ((found = regex.exec(url.href)) !== null) {
-        // Extract parameter name and value from the match
-        const paramName = found[1];
-        const paramValue = found[2];
-
-        // If both name and value are found, add them to the params object
-        if (paramName && paramValue) {
-          params[paramName] = paramValue;
-        }
-      }
-
-      const res = match(matchedRoute.path)(url.pathname);
-
-      await matchedRoute.action?.(url.href, res ? res.params : {}, params);
+      await matchedRoute.action?.(url.href, res ? res.params : {}, query);
     } catch (e) {
       // handle error (e.g., log it)
     }
