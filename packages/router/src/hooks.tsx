@@ -338,7 +338,6 @@ export function useNavigator() {
    */
   async function open(path: string, passProps = {}, options?: Options) {
     const url = createAppURL(path);
-
     const matchedRoute = route.routes.find(it => {
       return match(it.path)(url.pathname);
     });
@@ -346,12 +345,14 @@ export function useNavigator() {
     if (!matchedRoute) return;
 
     try {
-      const {guards} = matchedRoute;
-      const redirect = await runGuards(url.href, route.url?.href, guards);
+      const redirect = await runGuards(
+        url.href,
+        route.url?.href,
+        matchedRoute.guards,
+      );
 
       if (redirect) {
         await open(redirect);
-
         // Break out of function since we are redirecting
         return;
       }
