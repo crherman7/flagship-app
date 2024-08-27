@@ -8,6 +8,7 @@
   "keywords": [],
   "main": "src/index",
   "scripts": {
+    "build:metro": "tsc --project tsconfig.metro.json",
     "build:babel": "tsc --project tsconfig.babel.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,5 +1,8 @@
 const path = require('path');
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const {
+  getCacheVersion,
+} = require('@brandingbrand/flagship-app-env/metro-bundler');
 
 /**
  * Metro configuration
@@ -14,6 +17,7 @@ const projectRoot = __dirname;
 const config = getDefaultConfig(projectRoot);
 
 config.watchFolders = [workspaceRoot];
+config.cacheVersion = getCacheVersion();
 
 /**
  * Resetting Metro cache to ensure Babel transforms reflect the updated environment.
@@ -28,7 +32,7 @@ config.watchFolders = [workspaceRoot];
  * @example
  * config.resetCache = true;
  */
-config.resetCache = true;
+// config.resetCache = true;
 
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
