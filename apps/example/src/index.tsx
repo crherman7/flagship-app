@@ -19,6 +19,7 @@ import {AsyncStorage} from '@brandingbrand/flagship-app-env/screens/AsyncStorage
 import {SensitiveInfo} from '@brandingbrand/flagship-app-env/screens/SensitiveInfo';
 
 import assets from './assets';
+import HelloWorldModal from './components/HelloWorldModal';
 
 register({
   routes: [
@@ -87,6 +88,8 @@ register({
           console.log('to1:', to);
           console.log('from1:', from);
           console.log('next:', next);
+
+          await next.showModal(HelloWorldModal, {}, {});
 
           next.redirect('/shop');
         },

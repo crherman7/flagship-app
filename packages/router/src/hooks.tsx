@@ -222,7 +222,7 @@ export function useNavigator() {
         await guard(
           parseUrl(toPath),
           fromPath ? parseUrl(fromPath) : undefined,
-          {cancel, redirect},
+          {cancel, redirect, showModal},
         );
       } catch (e) {
         // TODO: Implement error handling logic if needed

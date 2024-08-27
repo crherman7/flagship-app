@@ -193,6 +193,31 @@ type Next = {
    * next.redirect('/login');
    */
   redirect: (path: string) => void;
+
+  /**
+   * Displays a modal with the specified component and data, and returns a promise
+   * that resolves when the modal is dismissed.
+   *
+   * @template T - The type of data passed to the modal.
+   * @template U - The type of data returned when the modal is resolved.
+   *
+   * @param Component - The React component to render inside the modal.
+   * @param data - The data to pass to the modal component.
+   * @param options - Additional options for displaying the modal.
+   *
+   * @returns A promise that resolves with the data returned from the modal when it's dismissed.
+   *
+   * @example
+   * ```typescript
+   * const result = await showModal<MyComponentProps, ResultType>(MyComponent, { prop1: 'value' }, { modalOptions: true });
+   * console.log('Modal result:', result);
+   * ```
+   */
+  showModal: <T, U>(
+    Component: React.ComponentType,
+    data: T,
+    options: Options,
+  ) => Promise<U>;
 };
 
 /**
